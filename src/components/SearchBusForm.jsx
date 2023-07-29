@@ -78,8 +78,8 @@ export default function SearchBusForm() {
           />
         </View>
         <View style={styles.searchButttonContainer}>
-          <TouchableOpacity>
-            <Text>SEARCH BUSES</Text>
+          <TouchableOpacity style={styles.searchButton}>
+            <Text style={styles.SearchText}>SEARCH BUSES</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -89,8 +89,18 @@ export default function SearchBusForm() {
 
 const styles = StyleSheet.create({
     searchButttonContainer:{
-        padding: 5
+        padding: 10
     },
+    searchButton:{
+      padding: 10,
+      borderRadius:5,
+      backgroundColor:COLORS.RED
+    }, 
+    SearchText:{
+      color: COLORS.WHITE,
+      fontWeight: "800",
+      textAlign: "center",
+    } ,
   container: {
     backgroundColor: COLORS.RED,
     paddingVertical: 20,
