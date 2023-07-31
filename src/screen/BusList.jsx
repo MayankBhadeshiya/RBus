@@ -1,6 +1,7 @@
-import { View, Text, FlatList } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import Bus from '../components/Bus'
+import COLORS from '../constants/Colors';
 
 export default function BusList() {
   const busData = [
@@ -68,14 +69,32 @@ export default function BusList() {
       seatAvailability : '36',
       travelAgencyName : 'MatruKrupa Travels',
       busType : 'NON A/C Sleeper',
-      rating :'2.7', 
+      rating :'4.7', 
     },
   ];
   return (
-  <FlatList
-    data={busData}
-    renderItem={({item}) => <Bus data={item}/>}
-    keyExtractor={(item) => item.busId}
-  />
+  <>
+    <FlatList
+      data={busData}
+      renderItem={({item}) => <Bus data={item}/>}
+      keyExtractor={(item) => item.busId}
+    />
+    <TouchableOpacity style={styles.sortAndFilterButton}>
+      <Text style={styles.buttonText}>SORT & FILTER</Text>
+    </TouchableOpacity>
+  </>
+  
   )
 }
+
+const styles = StyleSheet.create({
+  sortAndFilterButton : {
+    backgroundColor : COLORS.RED,
+    alignItems : 'center',
+    padding : 15
+  },
+  buttonText : {
+    color : COLORS.WHITE,
+    fontWeight : 'bold'
+  }
+})

@@ -3,6 +3,13 @@ import COLORS from "../constants/Colors";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 export default function Bus({data})
 {
+    let bg = COLORS.SUCCESS
+    if(data.rating < 4){
+        bg = COLORS.WARNING
+    } 
+    if(data.rating < 3){
+        bg = COLORS.DANGER
+    }
     return(
         <View style={styles.OuterContainer}>
             <View style={styles.TimeAndPriceContainer}>
@@ -18,7 +25,7 @@ export default function Bus({data})
                     <Text style={styles.boldLetter}>{data.travelAgencyName}</Text>
                     <Text style={styles.grayLetter}>{data.busType}</Text>
                 </View>
-                <View style={[styles.ratingContainer , {backgroundColor : COLORS.SUCCESS}]}>
+                <View style={[styles.ratingContainer , {backgroundColor : bg}]}>
                     <Text style={{color : COLORS.WHITE , marginRight : 5}}>{data.rating}</Text>
                     <FontAwesome name="star" color={COLORS.WHITE}/>
                 </View>
