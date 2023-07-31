@@ -2,8 +2,15 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native
 import React from 'react'
 import Bus from '../components/Bus'
 import COLORS from '../constants/Colors';
+import { useNavigation } from '@react-navigation/native';
+import ROUTES from '../constants/Routes';
 
 export default function BusList() {
+  const navigation = useNavigation();
+  function filtersHandler()
+  {
+    navigation.navigate(ROUTES.FILTERS);
+  }
   const busData = [
     {
       busId : 'b1',
@@ -78,12 +85,12 @@ export default function BusList() {
       data={busData}
       renderItem={({item}) => <Bus data={item}/>}
       keyExtractor={(item) => item.busId}
+      showsVerticalScrollIndicator = {false}
     />
-    <TouchableOpacity style={styles.sortAndFilterButton}>
+    <TouchableOpacity style={styles.sortAndFilterButton} onPress={filtersHandler}>
       <Text style={styles.buttonText}>SORT & FILTER</Text>
     </TouchableOpacity>
   </>
-  
   )
 }
 
@@ -91,10 +98,11 @@ const styles = StyleSheet.create({
   sortAndFilterButton : {
     backgroundColor : COLORS.RED,
     alignItems : 'center',
-    padding : 15
+    padding : 15,
+    marginTop : 15
   },
   buttonText : {
     color : COLORS.WHITE,
-    fontWeight : 'bold'
+    fontWeight : 'bold',
   }
 })
