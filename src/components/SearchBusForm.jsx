@@ -9,11 +9,17 @@ import React, {useState} from 'react';
 import COLORS from '../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import DatePicker from 'react-native-date-picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { useNavigation } from '@react-navigation/native';
+import ROUTES from '../constants/Routes';
 
 export default function SearchBusForm() {
     const [date, setDate] = useState(new Date());
     const [open, setOpen] = useState(false);
+    const navigation = useNavigation()
+    const handleSearch = () => {
+      navigation.navigate(ROUTES.BUSLIST)
+    }
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -63,10 +69,8 @@ export default function SearchBusForm() {
               })}
             </Text>
           </TouchableOpacity>
-          <DatePicker
-            modal
-            open={open}
-            date={date}
+          <DateTimePickerModal
+            isVisible={open}
             mode="date"
             onConfirm={date => {
               setOpen(false);
@@ -78,7 +82,7 @@ export default function SearchBusForm() {
           />
         </View>
         <View style={styles.searchButttonContainer}>
-          <TouchableOpacity style={styles.searchButton}>
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
             <Text style={styles.SearchText}>SEARCH BUSES</Text>
           </TouchableOpacity>
         </View>
