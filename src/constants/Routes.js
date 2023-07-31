@@ -7,7 +7,9 @@ const ROUTES = {
   FILTERS: "Filters",
   SEATALLOCATION: "SeatAllocation",
   BORDINGDROPING: "BordersDropingPoint",
-  PASSENGERDETAIL: "PassengerDetail"
+  PASSENGERDETAIL: "PassengerDetail",
+  LOGIN:'Login',
+  OTP: 'OTP',
 };
 
 export default ROUTES;

@@ -7,10 +7,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import COLORS from '../constants/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppStack from './AppStack';
+import AuthStack from './AuthStack';
 
 export default function AppNav() {
   const dispatch = useDispatch();
   const connected = useSelector(state => state.connectionReducer.connection);
+  const isInAuth = useSelector(state => state.authReducer.inAuth);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(s => {
@@ -36,8 +38,7 @@ export default function AppNav() {
 
   return (
     <NavigationContainer>
-      {/* {activeuser === '' ? <AuthStack /> : <AppStack />} */}
-      <AppStack />
+      {isInAuth ? <AuthStack /> : <AppStack />}
     </NavigationContainer>
   );
 }
