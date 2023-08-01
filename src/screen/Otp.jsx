@@ -9,9 +9,11 @@ import {
 import React, {useEffect, useState} from 'react';
 import AuthTop from '../components/AuthTop';
 import COLORS from '../constants/Colors';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {authActions} from '../redux/auth';
-import { getToken } from '../API/user';
+import {getToken} from '../API/user';
+import {connectionActions} from '../redux/connection';
+import Loader from '../components/Loader';
 
 export default function Otp({route}) {
   const {otp, email} = route.params;
@@ -19,23 +21,30 @@ export default function Otp({route}) {
   const [currOTP, setCurrOTP] = useState(otp);
   const [enterdOTP, setEnterdOTP] = useState('');
   const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const dispatch = useDispatch();
+  const isLoading = useSelector(state => state.connectionReducer.isLoading);
+
   const handleverify = () => {
     if (Number(currOTP) === Number(enterdOTP)) {
-        async function get() {
-          const res = await getToken(email);
-          if (res === 'noData') {
-            setError(true);
-            console.log(res)
-          } else {
-            dispatch(authActions.changeAuth(false));
-            dispatch(authActions.setToken(res));
-            console.log(res)
-          }
+      async function get() {
+        dispatch(connectionActions.setLoding(true));
+        const res = await getToken(email);
+        dispatch(connectionActions.setLoding(false));
+        if (res.result === 'noData') {
+          setError(true);
+          setErrorMsg('Network Request Failed. (StatusCode: ' + res.status + ")");
+          console.log(res);
+        } else {
+          dispatch(authActions.changeAuth(false));
+          dispatch(authActions.setToken(res.result.token));
+          dispatch(authActions.setUser(res.result.data));
         }
-        get();
+      }
+      get();
     } else {
       setError(true);
+      setErrorMsg('Invalid OTP');
     }
   };
   const handResend = () => {
@@ -44,6 +53,9 @@ export default function Otp({route}) {
     }
     setCount(prev => prev - 1);
   };
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <View>
       <AuthTop />
@@ -68,7 +80,7 @@ export default function Otp({route}) {
         {error && (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>OTP Verification failed</Text>
-            <Text style={styles.errorText}>Invalid OTP</Text>
+            <Text style={styles.errorText}>{errorMsg}</Text>
           </View>
         )}
       </View>

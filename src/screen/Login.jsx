@@ -13,12 +13,19 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AuthTop from '../components/AuthTop';
 import ROUTES from '../constants/Routes';
 import {getOTP} from '../API/user';
+import {useDispatch, useSelector} from 'react-redux';
+import {connectionActions} from '../redux/connection';
+import Loader from '../components/Loader';
 
 export default function Login({navigation}) {
   const [pEmail, setPemial] = useState('example@example.com');
   const [email, setEmial] = useState('');
   const [otp, setOtp] = useState();
-  const [apisuccess, setapisuccess] = useState(false);
+  const [apisuccess, setapisuccess] = useState();
+  const [error, setError] = useState(false);
+  const [errorStatus, setErrorStatus] = useState('');
+  const isLoading = useSelector(state => state.connectionReducer.isLoading);
+  const dispatch = useDispatch();
 
   function validateEmail() {
     var regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
@@ -37,18 +44,36 @@ export default function Login({navigation}) {
       setEmial('');
       setPemial('example@example.com❗');
     } else {
-      const OTP = generateOTP();
-      setOtp(OTP);
-      const res = getOTP(OTP, email);
-      setapisuccess(res);
+      async function call() {
+        dispatch(connectionActions.setLoding(true));
+        const OTP = generateOTP();
+        setOtp(OTP);
+        const res = await getOTP(OTP, email);
+        dispatch(connectionActions.setLoding(false));
+        if (res.success === true) {
+          setapisuccess(res.success);
+        } else {
+          console.log(res)
+          setapisuccess(res.success);
+          setErrorStatus(res.status);
+        }
+      }
+      call();
     }
   };
 
   useEffect(() => {
-    if (apisuccess) {
+    if (apisuccess === true) {
       navigation.navigate(ROUTES.OTP, {email, otp});
+    } else if (apisuccess === false) {
+      setEmial('');
+      setError(true);
     }
   }, [apisuccess]);
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <View style={styles.outerContainer}>
       <AuthTop />
@@ -68,7 +93,10 @@ export default function Login({navigation}) {
           autoCapitalize="none"
           autoCorrect={false}
           value={email}
-          onChangeText={text => setEmial(text)}></TextInput>
+          onChangeText={text => {
+            setEmial(text);
+            setError(false);
+          }}></TextInput>
       </View>
       <TouchableOpacity
         style={styles.buttonContainer}
@@ -104,6 +132,14 @@ export default function Login({navigation}) {
         <Text style={styles.linkText}>Terms and Conditions</Text> and{' '}
         <Text style={styles.linkText}>Privacy Policy</Text>.
       </Text>
+      {error && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>
+            Network Request Failed. (Status code : {errorStatus})
+          </Text>
+          <Text style={styles.errorText}>Plase Try Again Later</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -182,5 +218,12 @@ const styles = StyleSheet.create({
   linkText: {
     color: COLORS.BLUE,
     textDecorationLine: 'underline',
+  },
+  errorContainer: {
+    marginVertical: 20,
+  },
+  errorText: {
+    textAlign: 'center',
+    color: COLORS.DANGER,
   },
 });
