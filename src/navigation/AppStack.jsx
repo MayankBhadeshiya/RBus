@@ -1,11 +1,12 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import HomeTabStack from './HomeTabStack';
-import BookingStack from './BookingStack';
 import ROUTES from '../constants/Routes';
 import BusList from '../screen/BusList';
 import Filters from '../screen/Filters';
-import COLORS from '../constants/Colors';
+import SeatAllocation from '../screen/SeatAllocation';
+import BordingDropping from '../screen/BordingDropping';
+import PassengerDetail from '../screen/PassengerDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +14,9 @@ export default function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitleAlign: 'left',
+        
+        headerTintColor: 'black',
+        headerBackTitleVisible:false,
         headerTitleStyle: {
           fontWeight: 'bold',
         },
@@ -23,13 +26,11 @@ export default function AppStack() {
         component={HomeTabStack}
         options={{headerShown: false}}
       />
-      <Stack.Screen name={ROUTES.BUSLIST} component={BusList} />
-      <Stack.Screen name={ROUTES.FILTERS} component={Filters} options={{headerStyle:{backgroundColor:COLORS.RED}}}/>
-      <Stack.Screen
-        name="Booking Stack"
-        component={BookingStack}
-        options={{headerShown: false}}
-      />
+      <Stack.Screen name={ROUTES.BUSLIST} component={BusList}/>
+      <Stack.Screen name={ROUTES.FILTERS} component={Filters} />
+      <Stack.Screen name={ROUTES.SEATALLOCATION} component={SeatAllocation} />
+      <Stack.Screen name={ROUTES.BORDINGDROPING} component={BordingDropping} />
+      <Stack.Screen name={ROUTES.PASSENGERDETAIL} component={PassengerDetail} />
     </Stack.Navigator>
   );
 }
