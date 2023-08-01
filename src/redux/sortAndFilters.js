@@ -1,12 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    SortBy : [{
-        price_LowToHigh : false,
-        best_Rated_First : false,
-        early_departure : false,
-        late_departure : false,
-    }],
+    SortBy : '',
     FilterBy :[{
         '06:00 - 11:59' : false,
         '12:00 - 17:59' : false,
@@ -22,5 +17,13 @@ const initialState = {
 const sortAndFiltersSlice = createSlice({
     name : 'sortAndFilters',
     initialState,
-    reducers : ''
-})
+    reducers : {
+        setSort(state , action)
+        {
+            state.SortBy = action.payload;
+        } 
+    }
+});
+
+export const sortAndFiltersActions = sortAndFiltersSlice.actions;
+export default sortAndFiltersSlice.reducer;
