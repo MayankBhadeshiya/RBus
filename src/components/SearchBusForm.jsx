@@ -13,6 +13,8 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useNavigation } from '@react-navigation/native';
 import ROUTES from '../constants/Routes';
+import { useDispatch } from 'react-redux';
+import { busListActions } from '../redux/BusList';
 
 export default function SearchBusForm() {
     const [date, setDate] = useState(new Date());
@@ -21,7 +23,8 @@ export default function SearchBusForm() {
     const [to, setTo] = useState('');
     const [pto, setPto] = useState('To');
     const [open, setOpen] = useState(false);
-    const navigation = useNavigation()
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
     const handleSwap = () => {
       const temp = from;
       setFrom(to);
@@ -36,6 +39,13 @@ export default function SearchBusForm() {
           setPto('To❗');
         }
       }  else {
+        dispatch(
+          busListActions.setRouteDetails({
+            start: from.trim().toLowerCase(),
+            end: to.trim().toLowerCase(),
+            date: date.toLocaleDateString('en-GB'),
+          }),
+        );
         navigation.navigate(ROUTES.BUSLIST);
       }
     }
