@@ -1,4 +1,11 @@
-import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import React, {useLayoutEffect} from 'react';
 import Bus from '../components/Bus';
 import COLORS from '../constants/Colors';
@@ -6,7 +13,7 @@ import {useSelector} from 'react-redux';
 import HeaderDate from '../components/HeaderDate';
 import ROUTES from '../constants/Routes';
 
-export default function BusList() {
+export default function BusList({navigation}) {
   const routeDetail = useSelector(state => state.busListReducer.routeDetails);
   const capitalizeString = str => {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -91,18 +98,22 @@ export default function BusList() {
     },
   ];
   return (
-  <>
-    <FlatList
-      data={busData}
-      renderItem={({item}) => <Bus data={item}/>}
-      keyExtractor={(item) => item.busId}
-      showsVerticalScrollIndicator = {false}
-    />
-    <TouchableOpacity style={styles.sortAndFilterButton} onPress={filtersHandler}>
-      <Text style={styles.buttonText}>SORT & FILTER</Text>
-    </TouchableOpacity>
-  </>
-  )
+    <>
+      <FlatList
+        data={busData}
+        renderItem={({item}) => <Bus data={item} />}
+        keyExtractor={item => item.busId}
+        showsVerticalScrollIndicator={false}
+      />
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity
+          style={styles.sortAndFilterButton}
+          onPress={filtersHandler}>
+          <Text style={styles.buttonText}>SORT & FILTER</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -114,10 +125,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.WHITE,
     fontWeight: 'bold',
-
   },
-  buttonText : {
-    color : COLORS.WHITE,
-    fontWeight : 'bold',
-  }
-})
+  container: {
+    backgroundColor: COLORS.RED,
+  },
+});

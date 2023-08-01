@@ -1,4 +1,4 @@
-import { TouchableOpacity , View , Text, StyleSheet} from "react-native"
+import { TouchableOpacity , View , Text, StyleSheet, SafeAreaView} from "react-native"
 import COLORS from "../constants/Colors";
 import {useDispatch} from 'react-redux';
 import {sortAndFiltersActions} from '../redux/sortAndFilters';
@@ -10,15 +10,19 @@ export default function ClearAndApply()
     {
         dispatch(sortAndFiltersActions.setClear());
     }
-    return(
-        <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.clearButton} onPress={setClear}>
-                <Text style={styles.buttontext}>Clear</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.applyButton}>
-                <Text style={styles.buttontext}>Apply</Text>
-            </TouchableOpacity>
-        </View>
+    return (
+      <View style={styles.buttonContainer}>
+        <SafeAreaView style={styles.clearButton}>
+          <TouchableOpacity onPress={setClear}>
+            <Text style={styles.buttontext}>Clear</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+        <SafeAreaView style={styles.applyButton}>
+          <TouchableOpacity>
+            <Text style={styles.buttontext}>Apply</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </View>
     );
 }
 
