@@ -20,7 +20,7 @@ export default function MyAccountLogin() {
         {userDetails.full_name !== '' && <Text>{userDetails.full_name}</Text>}
         {userDetails.age !== null && userDetails.gender !== null && (
           <Text>
-            {userDetails.gender}, {userDetails.age} years
+            {userDetails.gender === 1 ? 'Male' : userDetails.gender === 2 ? 'Female' : 'Others'}, {userDetails.age} years
           </Text>
         )}
         {userDetails.phone_number !== '' && (
