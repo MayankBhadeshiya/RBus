@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         padding : 15,
         backgroundColor : COLORS.WHITE,
         borderRadius : 20,
-        marginTop : 10,
+        marginVertical : 5,
         marginHorizontal : 15
     },
     TimeAndPriceContainer : {

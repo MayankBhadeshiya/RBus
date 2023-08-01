@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor : COLORS.RED,
     alignItems : 'center',
     padding : 15,
-    marginTop : 15
+
   },
   buttonText : {
     color : COLORS.WHITE,

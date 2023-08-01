@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import COLORS from '../constants/Colors';
 import {RadioGroup} from 'react-native-radio-buttons-group';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,8 +7,15 @@ import {sortAndFiltersActions} from '../redux/sortAndFilters';
 
 export default function SortBy() {
   const dispatch = useDispatch();
+  const [selectedId, setSelectedId] = useState();
   const SelectedSort = useSelector(state => state.sortAndFiltersReducer.SortBy);
-  console.log(SelectedSort);
+  useEffect(() => {
+    if(SelectedSort == '')
+    {
+      setSelectedId('');
+    }
+  },[SelectedSort]);
+  
   const RadioButtons = useMemo(
     () => [
       {
@@ -17,6 +24,8 @@ export default function SortBy() {
         labelStyle : {color : COLORS.GRAY300},   
         value: 'price-LowToHigh',
         color: COLORS.RED,
+        size : 18,
+        containerStyle : {marginBottom : 14},
       },
       {
         id: '2',
@@ -24,6 +33,8 @@ export default function SortBy() {
         labelStyle : {color : COLORS.GRAY300},
         value: 'bestRatedFirst',
         color: COLORS.RED,
+        size : 18,
+        containerStyle : {marginBottom : 14},
       },
       {
         id: '3',
@@ -31,6 +42,8 @@ export default function SortBy() {
         labelStyle : {color : COLORS.GRAY300},
         value: 'earlyDeparture',
         color: COLORS.RED,
+        size : 18,
+        containerStyle : {marginBottom : 14},
       },
       {
         id: '4',
@@ -38,11 +51,13 @@ export default function SortBy() {
         labelStyle : {color : COLORS.GRAY300},
         value: 'lateDeparture',
         color: COLORS.RED,
+        size : 18,
+        containerStyle : {marginBottom : 10},
       },
     ],[],
   );
-
-  const [selectedId, setSelectedId] = useState();
+  
+  
 
   function radioButtonHandler(id) {
     setSelectedId(id);
@@ -67,7 +82,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     padding: 15,
     borderBottomWidth : 1,
-    borderBottomColor : COLORS.GRAY200
+    borderBottomColor : COLORS.GRAY100
   },
   radioButton: {
     color: COLORS.RED,
@@ -75,5 +90,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
+    marginBottom : 15
   },
 });

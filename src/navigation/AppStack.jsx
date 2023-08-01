@@ -5,6 +5,7 @@ import BookingStack from './BookingStack';
 import ROUTES from '../constants/Routes';
 import BusList from '../screen/BusList';
 import Filters from '../screen/Filters';
+import COLORS from '../constants/Colors';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,7 @@ export default function AppStack() {
         options={{headerShown: false}}
       />
       <Stack.Screen name={ROUTES.BUSLIST} component={BusList} />
-      <Stack.Screen name={ROUTES.FILTERS} component={Filters} />
+      <Stack.Screen name={ROUTES.FILTERS} component={Filters} options={{headerStyle:{backgroundColor:COLORS.RED}}}/>
       <Stack.Screen
         name="Booking Stack"
         component={BookingStack}
