@@ -14,9 +14,8 @@ export default function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        
         headerTintColor: 'black',
-        headerBackTitleVisible:false,
+        headerBackTitleVisible: false,
         headerTitleStyle: {
           fontWeight: 'bold',
         },
@@ -26,7 +25,7 @@ export default function AppStack() {
         component={HomeTabStack}
         options={{headerShown: false}}
       />
-      <Stack.Screen name={ROUTES.BUSLIST} component={BusList}/>
+      <Stack.Screen name={ROUTES.BUSLIST} component={BusList} />
       <Stack.Screen name={ROUTES.FILTERS} component={Filters} />
       <Stack.Screen name={ROUTES.SEATALLOCATION} component={SeatAllocation} />
       <Stack.Screen name={ROUTES.BORDINGDROPING} component={BordingDropping} />

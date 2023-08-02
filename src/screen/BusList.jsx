@@ -4,105 +4,103 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  View,
 } from 'react-native';
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import Bus from '../components/Bus';
 import COLORS from '../constants/Colors';
 import {useSelector} from 'react-redux';
 import HeaderDate from '../components/HeaderDate';
 import ROUTES from '../constants/Routes';
+import {getBusList} from '../API/busList';
+import Loader from '../components/Loader';
 
 export default function BusList({navigation}) {
+  const [busListData, setBusListData] = useState('');
+  const [error, setError] = useState(false);
+  const [listEnd, setListEnd] = useState(false);
+  const [page, setPage] = useState(1);
   const routeDetail = useSelector(state => state.busListReducer.routeDetails);
+  const connected = useSelector(state => state.connectionReducer.connection);
+
+  async function get() {
+    const buses = await getBusList(
+      routeDetail.start,
+      routeDetail.end,
+      routeDetail.date,
+      page,
+    );
+    if (buses === 'noData') {
+      setError(true);
+    } else {
+      setError(false);
+      if (page === 1) {
+        setBusListData(buses);
+        if (buses.length && !listEnd) {
+          setPage(prev => prev + 1);
+        } else {
+          setListEnd(true);
+        }
+      } else {
+        if (buses.length && !listEnd) {
+          setBusListData(prev => [...prev, ...buses]);
+          setPage(prev => prev + 1);
+        } else {
+          setListEnd(true);
+        }
+      }
+    }
+  }
+
   const capitalizeString = str => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => <HeaderDate />,
+      headerRight: () => <HeaderDate date={routeDetail.date} />,
       title: `${capitalizeString(routeDetail.start)} - ${capitalizeString(
         routeDetail.end,
       )}`,
     });
   }, []);
+
+  useEffect(() => {
+    if (connected) {
+      get();
+    }
+  }, [connected]);
+
   function filtersHandler() {
     navigation.navigate(ROUTES.FILTERS);
   }
-  const busData = [
-    {
-      busId: 'b1',
-      departureTime: '21:25',
-      destinationTime: '03:15',
-      price: '400',
-      journeyTime: '5h 50m',
-      seatAvailability: '20',
-      travelAgencyName: 'Jay Dwarkesh Travels',
-      busType: 'NON A/C Sleeper',
-      rating: '3.9',
-    },
-    {
-      busId: 'b2',
-      departureTime: '23:15',
-      destinationTime: '04:30',
-      price: '450',
-      journeyTime: '5h 15m',
-      seatAvailability: '18',
-      travelAgencyName: 'Tulsi Travels',
-      busType: 'AC Sleeper',
-      rating: '3.2',
-    },
-    {
-      busId: 'b3',
-      departureTime: '22:20',
-      destinationTime: '04:05',
-      price: '450',
-      journeyTime: '5h 45m',
-      seatAvailability: '20',
-      travelAgencyName: 'Samay Travels',
-      busType: 'NON A/C Sleeper',
-      rating: '3.1',
-    },
-    {
-      busId: 'b4',
-      departureTime: '21:50',
-      destinationTime: '02:50',
-      price: '749',
-      journeyTime: '5h 00m',
-      seatAvailability: '21',
-      travelAgencyName: 'Samay Travels',
-      busType: 'A/C Sleeper (2+1)',
-      rating: '3.5',
-    },
-    {
-      busId: 'b5',
-      departureTime: '22:45',
-      destinationTime: '04:00',
-      price: '450',
-      journeyTime: '5h 15m',
-      seatAvailability: '36',
-      travelAgencyName: 'Tulsi Travels',
-      busType: 'NON A/C Sleeper',
-      rating: '2.4',
-    },
-    {
-      busId: 'b6',
-      departureTime: '21:45',
-      destinationTime: '02:00',
-      price: '450',
-      journeyTime: '4h 15m',
-      seatAvailability: '36',
-      travelAgencyName: 'MatruKrupa Travels',
-      busType: 'NON A/C Sleeper',
-      rating: '4.7',
-    },
-  ];
+
+  if (error) {
+    return (
+      <View contentContainerStyle={styles.errorcontainer}>
+        <Text style={styles.errortext}>Something went Wrong...</Text>
+      </View>
+    );
+  }
+  if (busListData === '') {
+    return <Loader />;
+  }
+  if (busListData.length === 0){
+    return <Text>No Bus</Text>
+  }
   return (
     <>
       <FlatList
-        data={busData}
+        data={busListData}
         renderItem={({item}) => <Bus data={item} />}
-        keyExtractor={item => item.busId}
+        keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
+        onEndReached={() => {
+          if (!listEnd) {
+            get();
+          }
+        }}
+        onEndReachedThreshold={10}
       />
       <SafeAreaView>
         <TouchableOpacity
@@ -124,5 +122,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.WHITE,
     fontWeight: 'bold',
+  },
+  errorcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errortext: {
+    fontSize: 24,
   },
 });

@@ -1,4 +1,4 @@
-const BASEURL = 'http://192.168.102.116:8000';
+import {BASEURLP} from '../constants/Url';
 
 export async function getOTP(OTP, email) {
   var myHeaders = new Headers();
@@ -16,7 +16,7 @@ export async function getOTP(OTP, email) {
     redirect: 'follow',
   };
   try {
-    const response = await fetch(`${BASEURL}/send_otp`, requestOptions);
+    const response = await fetch(`${BASEURLP}/send_otp`, requestOptions);
     if (response.status === 200) {
       const result = await response.json();
       return {success: true, status: response.status};
@@ -30,31 +30,31 @@ export async function getOTP(OTP, email) {
   }
 }
 
-export async function getToken(email){
-    var myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
+export async function getToken(email) {
+  var myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
 
-    var raw = JSON.stringify({
-      email: email,
-    });
+  var raw = JSON.stringify({
+    email: email,
+  });
 
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow',
-    };
-    try {
-      const response = await fetch(`${BASEURL}/registerUser`, requestOptions);
-      if (response.status === 200) {
-        const result = await response.json();
-        return {result, status: response.status};
-      } else {
-        console.log(response.status);
-        return {result:'noData', status: response.status};
-      }
-    } catch (err) {
-      console.log(err.message);
-      return {result: 'noData', status: 'unknown'};
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  };
+  try {
+    const response = await fetch(`${BASEURLP}/registerUser`, requestOptions);
+    if (response.status === 200) {
+      const result = await response.json();
+      return {result, status: response.status};
+    } else {
+      console.log(response.status);
+      return {result: 'noData', status: response.status};
     }
+  } catch (err) {
+    console.log(err.message);
+    return {result: 'noData', status: 'unknown'};
+  }
 }
