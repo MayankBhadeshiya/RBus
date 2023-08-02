@@ -1,5 +1,4 @@
 import {
-  View,
   Text,
   FlatList,
   TouchableOpacity,
@@ -105,7 +104,7 @@ export default function BusList({navigation}) {
         keyExtractor={item => item.busId}
         showsVerticalScrollIndicator={false}
       />
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView>
         <TouchableOpacity
           style={styles.sortAndFilterButton}
           onPress={filtersHandler}>
@@ -125,8 +124,5 @@ const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.WHITE,
     fontWeight: 'bold',
-  },
-  container: {
-    backgroundColor: COLORS.RED,
   },
 });
