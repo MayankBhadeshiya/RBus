@@ -7,6 +7,8 @@ import Filters from '../screen/Filters';
 import SeatAllocation from '../screen/SeatAllocation';
 import BordingDropping from '../screen/BordingDropping';
 import PassengerDetail from '../screen/PassengerDetail';
+import AboutUs from '../screen/AboutUs';
+import Profile from '../screen/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +33,8 @@ export default function AppStack() {
       <Stack.Screen name={ROUTES.SEATALLOCATION} component={SeatAllocation} />
       <Stack.Screen name={ROUTES.BORDINGDROPING} component={BordingDropping} />
       <Stack.Screen name={ROUTES.PASSENGERDETAIL} component={PassengerDetail} />
+      <Stack.Screen name={ROUTES.ABOUT} component={AboutUs}/>
+      <Stack.Screen name={ROUTES.PROFILE} component={Profile}/>
     </Stack.Navigator>
   );
 }

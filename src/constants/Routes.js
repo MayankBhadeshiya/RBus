@@ -10,6 +10,8 @@ const ROUTES = {
   PASSENGERDETAIL: "PassengerDetail",
   LOGIN:'Login',
   OTP: 'OTP',
+  ABOUT : 'About',
+  PROFILE : 'Profile',
 };
 
 export default ROUTES;
