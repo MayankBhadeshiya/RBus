@@ -1,82 +1,83 @@
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
-import React, { useCallback, useState } from 'react'
-import CustomSwitch from '../components/CustomSwitch'
+import {View, Text, FlatList, TouchableOpacity, SafeAreaView, StyleSheet} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import CustomSwitch from '../components/CustomSwitch';
 import BoardDrop from '../components/BoardDrop';
+import {useSelector} from 'react-redux';
+import CustomButtonFooter from '../components/CustomButtonFooter';
+import ROUTES from '../constants/Routes';
+import COLORS from '../constants/Colors';
 
-export default function BordingDropping() {
+export default function BordingDropping({navigation,route}) {
+  const [selected, setSelected] = useState(1);
+  const [selectedBoardingPlace, setSelectedBoardingPlace] = useState('');
+  const [selectedDroppingPlace, setSelectedDroppingPlace] = useState('');
 
-  const [selected , setSelected] = useState(1);
-  const [selectedBoardingPlace , setSelectedBoardingPlace] = useState('');
-  const [selectedDroppingPlace , setSelectedDroppingPlace] = useState('');
-  console.log(selected);
+  const routeDetail = useSelector(state => state.busListReducer.routeDetails);
+  const capitalizeString = str => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  const {departureTime, arrivalTime} = route.params;
+
   const boardingPoints = [
     {
-      name : 'Naroda',
-      time : '22:15',
+      name: capitalizeString(routeDetail.start) + ' Bus station',
+      time: departureTime,
     },
-    {
-      name : 'Bapu Nagar',
-      time : '22:45'
-    },
-    {
-      name : 'Khodiyar Nagar',
-      time : '22:50'
-    },
-    {
-      name : 'Virat Nagar',
-      time : '22:53',
-    },
-    {
-      name : 'Geeta Mandir bus stand',
-      time : '23:15'
-    },
-    {
-      name : 'paldi',
-      time : '23:30'
-    },
-    {
-      name : 'satalite',
-      time : '23:45',
-    },
-    {
-      name : 'iskon',
-      time : '23:55',
-    },
-    {
-      name : 'prahlad nagar',
-      time : '23:59',
-    }
   ];
-
   const droppingPoints = [
     {
-      name : 'indira Marg',
-      time : '06:30(next-day)'
-    },
-    {
-      name : 'Jolly Bunglow',
-      time : '06:30(next-day)'
-    },
-    {
-      name : 'Victoria Bridge',
-      time : '06:30(next-day)'
+      name: capitalizeString(routeDetail.end) + ' Bus Station',
+      time: arrivalTime,
     },
   ];
+
+  const handlePress = () => {
+    navigation.navigate(ROUTES.PASSENGERDETAIL);
+  };
+
   return (
-    <View>
-      <CustomSwitch
-        selectionMode={1}
-        option1="BOARDING"
-        option2="DROPPING"
-        onSelectSwitch={(value) => {setSelected(value)}}>
-      </CustomSwitch>
-      <FlatList
-        data={selected == 1 ? boardingPoints : droppingPoints}
-        renderItem={({item}) => <TouchableOpacity onPress={ selected == 1 ? setSelectedBoardingPlace.bind(this , item.name) : setSelectedDroppingPlace.bind(this , item.name)}>
-          <BoardDrop name={item.name} time={item.time} place={selected == 1 ? selectedBoardingPlace : selectedDroppingPlace}/>
-          </TouchableOpacity>
-        }
-      />
+    <View style={styles.container}>
+      <View>
+        <CustomSwitch
+          selectionMode={1}
+          option1="BOARDING"
+          option2="DROPPING"
+          onSelectSwitch={value => {
+            setSelected(value);
+          }}></CustomSwitch>
+        <FlatList
+          data={selected == 1 ? boardingPoints : droppingPoints}
+          renderItem={({item}) => (
+            <TouchableOpacity
+              onPress={
+                selected == 1
+                  ? setSelectedBoardingPlace.bind(this, item.name)
+                  : setSelectedDroppingPlace.bind(this, item.name)
+              }>
+              <BoardDrop
+                name={item.name}
+                time={item.time}
+                place={
+                  selected == 1 ? selectedBoardingPlace : selectedDroppingPlace
+                }
+              />
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+      <SafeAreaView>
+        {selectedBoardingPlace !== '' && selectedDroppingPlace !== '' && (
+          <CustomButtonFooter
+            buttonText={'PROCEED'}
+            onPress={handlePress}
+          />
+        )}
+      </SafeAreaView>
     </View>
-  )
+  );
 }
+
+const styles = StyleSheet.create({
+  container:{flex: 1, justifyContent: 'space-between', backgroundColor:COLORS.WHITE}
+})

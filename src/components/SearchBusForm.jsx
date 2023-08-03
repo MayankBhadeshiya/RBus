@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import ROUTES from '../constants/Routes';
 import { useDispatch } from 'react-redux';
 import { busListActions } from '../redux/BusList';
+import { sortAndFiltersActions } from '../redux/sortAndFilters';
 
 export default function SearchBusForm() {
     const [date, setDate] = useState(new Date());
@@ -46,7 +47,8 @@ export default function SearchBusForm() {
             date: date.toLocaleDateString('en-GB'),
           }),
         );
-        navigation.navigate(ROUTES.BUSLIST);
+        dispatch(sortAndFiltersActions.setClear());
+        navigation.navigate(ROUTES.BUSLIST, {applyedFilters: false, isClear: true});
       }
     }
   return (

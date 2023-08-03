@@ -7,18 +7,25 @@ import {
 import COLORS from '../constants/Colors';
 import {useDispatch} from 'react-redux';
 import {sortAndFiltersActions} from '../redux/sortAndFilters';
+import { useNavigation } from '@react-navigation/native';
+import ROUTES from '../constants/Routes';
 
 export default function ClearAndApply() {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   function setClear() {
     dispatch(sortAndFiltersActions.setClear());
+    navigation.navigate(ROUTES.BUSLIST, {applyedFilters: true, isClear: true});
+  }
+  const handleApply = () => {
+    navigation.navigate(ROUTES.BUSLIST, {applyedFilters: true, isClear: false});
   }
   return (
     <SafeAreaView style={styles.buttonContainer}>
       <TouchableOpacity style={styles.clearButton} onPress={setClear}>
         <Text style={styles.buttontext}>Clear</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.applyButton}>
+      <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
         <Text style={styles.buttontext}>Apply</Text>
       </TouchableOpacity>
     </SafeAreaView>

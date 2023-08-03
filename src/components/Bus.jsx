@@ -51,7 +51,7 @@ export default function Bus({data}) {
     const givenTime = new Date(givenTimeStr);
     const currentTime = new Date();
     currentTime.setHours(
-      currentTime.getHours() + 6,
+      currentTime.getHours() + 5,
       currentTime.getMinutes() + 30,
     );
     const timeDifferenceMs = givenTime - currentTime;

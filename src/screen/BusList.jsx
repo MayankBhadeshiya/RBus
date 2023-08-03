@@ -9,27 +9,38 @@ import {
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import Bus from '../components/Bus';
 import COLORS from '../constants/Colors';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import HeaderDate from '../components/HeaderDate';
 import ROUTES from '../constants/Routes';
 import {getBusList} from '../API/busList';
 import Loader from '../components/Loader';
+import SomethingWentWrong from '../components/SomethingWentWrong';
+import NoBusesFound from '../components/NoBusesFound';
+import {getBusFilteredList} from '../API/busFilter';
+import ClearFilterButton from '../components/ClearFilterButton';
+import { sortAndFiltersActions } from '../redux/sortAndFilters';
 
-export default function BusList({navigation}) {
+export default function BusList({navigation, route}) {
   const [busListData, setBusListData] = useState('');
+  const [isLoading, setIsloading] = useState(false);
+  const [hasClear, setHasClear] = useState(route.params.isClear);
   const [error, setError] = useState(false);
   const [listEnd, setListEnd] = useState(false);
   const [page, setPage] = useState(1);
   const routeDetail = useSelector(state => state.busListReducer.routeDetails);
   const connected = useSelector(state => state.connectionReducer.connection);
-
+  const FilterBy = useSelector(state => state.sortAndFiltersReducer.FilterBy);
+  const SortBy = useSelector(state => state.sortAndFiltersReducer.SortBy);
+  const dispatch = useDispatch()
   async function get() {
+    setIsloading(true);
     const buses = await getBusList(
       routeDetail.start,
       routeDetail.end,
       routeDetail.date,
       page,
     );
+    setIsloading(false);
     if (buses === 'noData') {
       setError(true);
     } else {
@@ -47,7 +58,37 @@ export default function BusList({navigation}) {
           setPage(prev => prev + 1);
         } else {
           setListEnd(true);
+          setPage(1);
         }
+      }
+    }
+  }
+
+  async function getFilterData() {
+    setIsloading(true);
+    const buses = await getBusFilteredList(
+      routeDetail.start,
+      routeDetail.end,
+      routeDetail.date,
+      FilterBy,
+      SortBy,
+      page,
+    );
+    setIsloading(false);
+    if (page === 1) {
+      setBusListData(buses);
+      if (buses.length && !listEnd) {
+        setPage(prev => prev + 1);
+      } else {
+        setListEnd(true);
+      }
+    } else {
+      if (buses.length && !listEnd) {
+        setBusListData(prev => [...prev, ...buses]);
+        setPage(prev => prev + 1);
+      } else {
+        setListEnd(true);
+        setPage(1);
       }
     }
   }
@@ -66,27 +107,48 @@ export default function BusList({navigation}) {
   }, []);
 
   useEffect(() => {
-    if (connected) {
-      get();
+    if (route.params.applyedFilters === true) {
+      setListEnd(false);
     }
-  }, [connected]);
+    if (connected) {
+      if (route.params.applyedFilters) {
+        getFilterData();
+      } else {
+        get();
+      }
+    }
+    setHasClear(route.params.isClear);
+  }, [connected, route.params]);
 
   function filtersHandler() {
     navigation.navigate(ROUTES.FILTERS);
   }
 
-  if (error) {
-    return (
-      <View contentContainerStyle={styles.errorcontainer}>
-        <Text style={styles.errortext}>Something went Wrong...</Text>
-      </View>
-    );
+  async function clearFilter(){
+    setHasClear(true);
+    dispatch(sortAndFiltersActions.setClear());
+    get();
   }
-  if (busListData === '') {
+
+  if (error) {
+    return <SomethingWentWrong />;
+  }
+  if (isLoading) {
     return <Loader />;
   }
-  if (busListData.length === 0){
-    return <Text>No Bus</Text>
+  if (busListData.length === 0) {
+    if (route.params.applyedFilters){
+      return (
+        <View style={styles.nobus}>
+          <NoBusesFound />
+          <SafeAreaView>
+            <ClearFilterButton onPress={clearFilter} />
+          </SafeAreaView>
+        </View>
+      );
+    };
+    return <NoBusesFound />;
+    
   }
   return (
     <>
@@ -102,6 +164,7 @@ export default function BusList({navigation}) {
         }}
         onEndReachedThreshold={10}
       />
+      {!route.params.isClear && !hasClear && <ClearFilterButton onPress={clearFilter} />}
       <SafeAreaView>
         <TouchableOpacity
           style={styles.sortAndFilterButton}
@@ -130,5 +193,10 @@ const styles = StyleSheet.create({
   },
   errortext: {
     fontSize: 24,
+  },
+  nobus: {
+    flex: 1,
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.WHITE,
   },
 });

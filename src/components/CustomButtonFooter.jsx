@@ -3,18 +3,13 @@ import React from 'react';
 import COLORS from '../constants/Colors';
 import {useSelector} from 'react-redux';
 import {windowWidth} from '../constants/Dimensions';
-import { useNavigation } from '@react-navigation/native';
-import ROUTES from '../constants/Routes';
 
-export default function SeatAllocationFooter() {
+export default function CustomButtonFooter({onPress, buttonText}) {
   const selectedSeat = useSelector(
     state => state.busDetailReducer.selectedSeat,
   );
   const totalPrice = useSelector(state => state.busDetailReducer.Totalprice);
-    const navigation = useNavigation();
-  const handlePress =()=>{
-    navigation.navigate(ROUTES.BORDINGDROPING)
-  };
+
   return (
     <View>
       <View style={styles.innerContainer}>
@@ -29,8 +24,8 @@ export default function SeatAllocationFooter() {
         </Text>
         <Text style={styles.priceText}>{totalPrice} ₹</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttontext}>SELECT BOARDING & DROPPING POINTS</Text>
+      <TouchableOpacity style={styles.button} onPress={onPress}>
+        <Text style={styles.buttontext}>{buttonText}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -54,14 +49,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 10,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.GRAY100,
   },
   priceText: {
     fontWeight: 'bold',
     color: COLORS.BLACK,
-    fontSize: 16
+    fontSize: 16,
   },
-  seattext:{
-    color:COLORS.BLACK,
-    width: windowWidth/3*2
+  seattext: {
+    color: COLORS.BLACK,
+    width: (windowWidth / 3) * 2,
   },
 });

@@ -23,12 +23,11 @@ export default function HomeTabStack() {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-        tabBarLabelStyle: {
-          marginBottom: 5,
-          fontWeight: 'bold',
+        tabBarStyle:{
+          paddingVertical:4
         },
-        tabBarIconStyle: {
-          marginTop: 4,
+        tabBarLabelStyle: {
+          fontWeight: 'bold',
         },
       }}>
       <Tab.Screen

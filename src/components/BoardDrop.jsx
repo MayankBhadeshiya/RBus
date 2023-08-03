@@ -4,23 +4,34 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 export default function BoardDrop({name , time , place})
 {   
-    return(
-        <View style={styles.container}>
-            <MaterialCommunityIcons name={place == name ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'} size={17} color={COLORS.RED}/>
-            <Text>{name}</Text>
-            <Text>{time}</Text>
-        </View>
+    return (
+      <View style={styles.container}>
+        <MaterialCommunityIcons
+          name={
+            place == name
+              ? 'checkbox-marked-circle'
+              : 'checkbox-blank-circle-outline'
+          }
+          size={17}
+          color={COLORS.RED}
+        />
+        <Text style={styles.text}>{name}</Text>
+        <Text style={styles.text}>{time}</Text>
+      </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container : {
-        flexDirection : 'row',
-        alignItems : 'center',
-        justifyContent : 'space-between',
-        borderBottomColor : COLORS.GRAY200,
-        borderBottomWidth : 0.5,
-        backgroundColor : COLORS.WHITE,
-        padding : 10
-    }
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomColor: COLORS.GRAY200,
+    borderBottomWidth: 0.5,
+    backgroundColor: COLORS.WHITE,
+    padding: 10,
+  },
+  text:{
+    color: COLORS.BLACK
+  }
 });

@@ -7,7 +7,9 @@ import SleeperLayout from '../components/SleeperLayout';
 import {getBusSeat} from '../API/busSeat';
 import Loader from '../components/Loader';
 import {busDetailActions} from '../redux/busDetails';
-import SeatAllocationFooter from '../components/SeatAllocationFooter';
+import CustomButtonFooter from '../components/CustomButtonFooter';
+import ROUTES from '../constants/Routes';
+import SomethingWentWrong from '../components/SomethingWentWrong';
 
 export default function SeatAllocation({navigation, route}) {
   const [error, setError] = useState(false);
@@ -28,6 +30,12 @@ export default function SeatAllocation({navigation, route}) {
   const connected = useSelector(state => state.connectionReducer.connection);
   const dispatch = useDispatch();
 
+  const handlePress = () => {
+    navigation.navigate(ROUTES.BORDINGDROPING, {
+      departureTime: departureTime,
+      arrivalTime: arrivalTime,
+    });
+  };
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => <HeaderRating rating={headerRight} />,
@@ -61,9 +69,7 @@ export default function SeatAllocation({navigation, route}) {
   }
   if (error) {
     return (
-      <View>
-        <Text>Something went Wrong...</Text>
-      </View>
+      <SomethingWentWrong />
     );
   }
   return (
@@ -80,7 +86,12 @@ export default function SeatAllocation({navigation, route}) {
       </ScrollView>
       <SafeAreaView>
         {selectedSeat.length > 0 && (
-          <SeatAllocationFooter></SeatAllocationFooter>
+          <CustomButtonFooter
+            buttonText={
+              'SELECT BOARDING & DROPPING POINTS'
+            }
+            onPress={handlePress}
+            />
         )}
       </SafeAreaView>
     </View>
