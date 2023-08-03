@@ -7,7 +7,6 @@ import Filters from '../screen/Filters';
 import SeatAllocation from '../screen/SeatAllocation';
 import BordingDropping from '../screen/BordingDropping';
 import PassengerDetail from '../screen/PassengerDetail';
-import COLORS from '../constants/Colors';
 
 const Stack = createNativeStackNavigator();
 
