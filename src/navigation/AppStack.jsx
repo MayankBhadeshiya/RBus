@@ -9,6 +9,7 @@ import BordingDropping from '../screen/BordingDropping';
 import PassengerDetail from '../screen/PassengerDetail';
 import AboutUs from '../screen/AboutUs';
 import Profile from '../screen/Profile';
+import COLORS from '../constants/Colors';
 
 const Stack = createNativeStackNavigator();
 
