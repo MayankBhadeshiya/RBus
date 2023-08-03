@@ -1,31 +1,33 @@
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, StyleSheet, SafeAreaView} from 'react-native';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import HeaderRating from '../components/HeaderRating';
 import SeatAllocationHeader from '../components/SeatAllocationHeader';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import SleeperLayout from '../components/SleeperLayout';
 import {getBusSeat} from '../API/busSeat';
 import Loader from '../components/Loader';
+import {busDetailActions} from '../redux/busDetails';
+import SeatAllocationFooter from '../components/SeatAllocationFooter';
 
 export default function SeatAllocation({navigation, route}) {
-  const [selectedSeat, setSelectedSeat] = useState([]);
   const [error, setError] = useState(false);
   const [isLoading, setIsloading] = useState(false);
-  const [bookedSeat, setBookedSeat] = useState([]);
+  const selectedSeat = useSelector(
+    state => state.busDetailReducer.selectedSeat,
+  );
 
-  const {title, headerRight, id, departureTime, arrivalTime, departure_date} =
-    route.params;
-  const routeDetail = useSelector(state => state.busListReducer.routeDetails);
+  const {
+    title,
+    headerRight,
+    id,
+    departureTime,
+    arrivalTime,
+    departure_date,
+    price,
+  } = route.params;
   const connected = useSelector(state => state.connectionReducer.connection);
+  const dispatch = useDispatch();
 
-  const capitalizeString = str => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-  const BusRoute = `${capitalizeString(routeDetail.start)} - ${capitalizeString(
-    routeDetail.end,
-  )}`;
-
-  console.log(id);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => <HeaderRating rating={headerRight} />,
@@ -36,20 +38,24 @@ export default function SeatAllocation({navigation, route}) {
   async function get() {
     setIsloading(true);
     const seats = await getBusSeat(id);
-    setIsloading(false)
+    setIsloading(false);
     if (seats === 'noData') {
       setError(true);
     } else {
       setError(false);
-      setBookedSeat(seats.booked_seats);
+      dispatch(busDetailActions.setBook(seats.booked_seats));
+      dispatch(busDetailActions.setAvlilable(seats.available_seats));
     }
   }
 
   useEffect(() => {
+    dispatch(busDetailActions.setPrice(price));
+    dispatch(busDetailActions.setId(id));
     if (connected) {
       get();
     }
   }, [connected]);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -61,17 +67,31 @@ export default function SeatAllocation({navigation, route}) {
     );
   }
   return (
-    <View>
-      <SeatAllocationHeader
-        departureTime={departureTime}
-        arrivalTime={arrivalTime}
-        BusRoute={BusRoute}
-        departure_date={departure_date}
-      />
-      <View
-        style={{justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
-        <SleeperLayout booked={bookedSeat}></SleeperLayout>
-      </View>
+    <View style={styles.container}>
+      <ScrollView>
+        <SeatAllocationHeader
+          departureTime={departureTime}
+          arrivalTime={arrivalTime}
+          departure_date={departure_date}
+        />
+        <View style={styles.layoutContainer}>
+          <SleeperLayout></SleeperLayout>
+        </View>
+      </ScrollView>
+      <SafeAreaView>
+        {selectedSeat.length > 0 && (
+          <SeatAllocationFooter></SeatAllocationFooter>
+        )}
+      </SafeAreaView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {flex: 1, justifyContent: 'space-between'},
+  layoutContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+});

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import COLORS from '../constants/Colors';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
@@ -21,7 +21,7 @@ export default function Bus({data}) {
     busType = 'A/C Sleeper';
   } else if (data.type === 2 && data.bus_type === 1) {
     busType = 'NON A/C Seater';
-  } else if (data.type === 2 && data.bus_type === 1) {
+  } else if (data.type === 2 && data.bus_type === 2) {
     busType = 'NON A/C Sleeper';
   }
   const extractTime = time => {
@@ -68,6 +68,7 @@ export default function Bus({data}) {
         departureTime: extractTime(data.departure_date),
         arrivalTime: extractTime(data.arrival_date),
         departure_date: data.departure_date,
+        price: data.fare,
       });
     }
   };
@@ -80,7 +81,7 @@ export default function Bus({data}) {
       }
       onPress={handlePress}>
       <View style={styles.TimeAndPriceContainer}>
-        <Text>
+        <Text style={styles.durationText}>
           <Text style={styles.boldLetter}>
             {extractTime(data.departure_date)}
           </Text>{' '}
@@ -130,8 +131,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  durationText: {
+    color: COLORS.BLACK,
+  },
   boldLetter: {
-    fontWeight: 'bold',
+    fontWeight:Platform.OS==='ios' ? 'bold' : '900',
+    color: COLORS.BLACK,
   },
   grayLetter: {
     color: COLORS.GRAY300,
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    padding: 5,
+    paddingVertical: 5,
   },
   travelsInfo: {
     flexDirection: 'row',
@@ -149,7 +154,7 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
     padding: 7,
     borderRadius: 8,
   },

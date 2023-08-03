@@ -1,14 +1,22 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 import COLORS from '../constants/Colors';
+import {useSelector} from 'react-redux';
 
 export default function SeatAllocationHeader({
   arrivalTime,
   departureTime,
-  BusRoute,
   departure_date,
 }) {
   const date = new Date(departure_date);
+  const routeDetail = useSelector(state => state.busListReducer.routeDetails);
+
+  const capitalizeString = str => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+  const BusRoute = `${capitalizeString(routeDetail.start)} - ${capitalizeString(
+    routeDetail.end,
+  )}`;
   return (
     <View style={styles.container}>
       <View style={styles.TimeAndDay}>
@@ -35,7 +43,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     gap: 5,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.RED
+    borderBottomColor: COLORS.RED,
   },
   TimeAndDay: {
     flexDirection: 'row',
@@ -44,7 +52,7 @@ const styles = StyleSheet.create({
   boldLetter: {
     fontWeight: 'bold',
   },
-  blackText:{
-    color: COLORS.BLACK
+  blackText: {
+    color: COLORS.BLACK,
   },
 });

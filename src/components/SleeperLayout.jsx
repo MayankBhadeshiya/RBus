@@ -3,99 +3,91 @@ import React, {useEffect, useState} from 'react';
 import COLORS from '../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SleeperSeat from '../SeatUI/SleeperSeat';
+import {useDispatch, useSelector} from 'react-redux';
+import {busDetailActions} from '../redux/busDetails';
 
-export default function SleeperLayout({booked}) {
-  const [row1, setRow1] = useState([
+export default function SleeperLayout() {
+  const booked = useSelector(state => state.busDetailReducer.bookedSeat);
+  const selectedSeat = useSelector(
+    state => state.busDetailReducer.selectedSeat,
+  );
+  const dispatch = useDispatch();
+  const defultSeat = [
     {id: 1, empty: true, selected: false},
-    {id: 7, empty: true, selected: false},
-    {id: 13, empty: true, selected: false},
-    {id: 19, empty: true, selected: false},
-    {id: 25, empty: true, selected: false},
-    {id: 31, empty: true, selected: false},
-  ]);
-
-  const [row2, setRow2] = useState([
     {id: 2, empty: true, selected: false},
     {id: 3, empty: true, selected: false},
-    {id: 8, empty: true, selected: false},
-    {id: 9, empty: true, selected: false},
-    {id: 14, empty: true, selected: false},
-    {id: 15, empty: true, selected: false},
-    {id: 20, empty: true, selected: false},
-    {id: 21, empty: true, selected: false},
-    {id: 26, empty: true, selected: false},
-    {id: 27, empty: true, selected: false},
-    {id: 32, empty: true, selected: false},
-    {id: 33, empty: true, selected: false},
-  ]);
-
-  const [row3, setRow3] = useState([
     {id: 4, empty: true, selected: false},
-    {id: 10, empty: true, selected: false},
-    {id: 16, empty: true, selected: false},
-    {id: 22, empty: true, selected: false},
-    {id: 28, empty: true, selected: false},
-    {id: 34, empty: true, selected: false},
-  ]);
-
-  const [row4, setRow4] = useState([
     {id: 5, empty: true, selected: false},
     {id: 6, empty: true, selected: false},
+    {id: 7, empty: true, selected: false},
+    {id: 8, empty: true, selected: false},
+    {id: 9, empty: true, selected: false},
+    {id: 10, empty: true, selected: false},
     {id: 11, empty: true, selected: false},
     {id: 12, empty: true, selected: false},
+    {id: 13, empty: true, selected: false},
+    {id: 14, empty: true, selected: false},
+    {id: 15, empty: true, selected: false},
+    {id: 16, empty: true, selected: false},
     {id: 17, empty: true, selected: false},
     {id: 18, empty: true, selected: false},
+    {id: 19, empty: true, selected: false},
+    {id: 20, empty: true, selected: false},
+    {id: 21, empty: true, selected: false},
+    {id: 22, empty: true, selected: false},
     {id: 23, empty: true, selected: false},
     {id: 24, empty: true, selected: false},
+    {id: 25, empty: true, selected: false},
+    {id: 26, empty: true, selected: false},
+    {id: 27, empty: true, selected: false},
+    {id: 28, empty: true, selected: false},
     {id: 29, empty: true, selected: false},
     {id: 30, empty: true, selected: false},
+    {id: 31, empty: true, selected: false},
+    {id: 32, empty: true, selected: false},
+    {id: 33, empty: true, selected: false},
+    {id: 34, empty: true, selected: false},
     {id: 35, empty: true, selected: false},
     {id: 36, empty: true, selected: false},
-  ]);
-  useEffect(()=>{
-   updatedRow1 = row1.map(seat =>
-     booked.includes(seat.id)
-       ? {
-           ...seat,
-           empty : false,
-         }
-       : seat,
-   );
-   setRow1(updatedRow1);
-
-   updatedRow2 = row2.map(seat =>
-     booked.includes(seat.id)
-       ? {
-           ...seat,
-           empty: false,
-         }
-       : seat,
-   );
-   setRow2(updatedRow2);
-
-   updatedRow3 = row3.map(seat =>
-     booked.includes(seat.id)
-       ? {
-           ...seat,
-           empty: false,
-         }
-       : seat,
-   );
-   setRow3(updatedRow3);
-
-   updatedRow4 = row4.map(seat =>
-     booked.includes(seat.id)
-       ? {
-           ...seat,
-           empty: false,
-         }
-       : seat,
-   );
-   setRow4(updatedRow4);
-  },[booked])
-  const handleSeatPress = (seatId, row ,setRow) => {
-    // Update the seat status when a seat is pressed
-    const updatedSeats = row.map(seat =>
+  ];
+  const [seats, setSeats] = useState([]);
+  const row1 = seats.filter((item, index) => index >= 0 && index % 6 === 0);
+  const row2 = seats.filter(
+    (item, index) => index >= 1 && (index - 1) % 6 === 0,
+  );
+  const row3 = seats.filter(
+    (item, index) => index >= 2 && (index - 2) % 6 === 0,
+  );
+  const row4 = seats.filter(
+    (item, index) => index >= 3 && (index - 3) % 6 === 0,
+  );
+  const row5 = seats.filter(
+    (item, index) => index >= 4 && (index - 4) % 6 === 0,
+  );
+  const row6 = seats.filter(
+    (item, index) => index >= 5 && (index - 5) % 6 === 0,
+  );
+  useEffect(() => {
+    updatedData = defultSeat.map(seat => {
+      (seat = booked.includes(seat.id)
+        ? {
+            ...seat,
+            empty: false,
+          }
+        : seat),
+        (seat = selectedSeat.includes(seat.id)
+          ? {
+              ...seat,
+              selected: true,
+            }
+          : seat);
+      return seat;
+    });
+    setSeats(updatedData);
+  }, [booked]);
+  const handleSeatPress = seatId => {
+    dispatch(busDetailActions.onselect(seatId));
+    const updatedSeats = seats.map(seat =>
       seat.id === seatId
         ? {
             ...seat,
@@ -103,7 +95,7 @@ export default function SleeperLayout({booked}) {
           }
         : seat,
     );
-    setRow(updatedSeats);
+    setSeats(updatedSeats);
   };
   return (
     <View style={styles.outerconainer}>
@@ -117,33 +109,57 @@ export default function SleeperLayout({booked}) {
         </View>
         <View style={styles.seatcontainer}>
           <View>
-            <FlatList
-              data={row1}
-              keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
+            {row1.map(seat => {
+              return (
                 <TouchableOpacity
+                  activeOpacity={1}
+                  key={seat.id}
                   style={styles.seat}
-                  onPress={handleSeatPress.bind(this, item.id, row1, setRow1)}>
+                  onPress={
+                    seat.empty ? handleSeatPress.bind(this, seat.id) : null
+                  }>
                   <SleeperSeat
-                    selected={item.selected}
-                    empty={item.empty}></SleeperSeat>
+                    selected={seat.selected}
+                    empty={seat.empty}></SleeperSeat>
                 </TouchableOpacity>
-              )}></FlatList>
+              );
+            })}
           </View>
-          <View>
-            <FlatList
-              data={row2}
-              keyExtractor={item => item.id}
-              numColumns={2}
-              renderItem={({item, index}) => (
-                <TouchableOpacity
-                  style={styles.seat}
-                  onPress={handleSeatPress.bind(this, item.id, row2, setRow2)}>
-                  <SleeperSeat
-                    selected={item.selected}
-                    empty={item.empty}></SleeperSeat>
-                </TouchableOpacity>
-              )}></FlatList>
+          <View style={{flexDirection: 'row'}}>
+            <View>
+              {row2.map(seat => {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    key={seat.id}
+                    style={styles.seat}
+                    onPress={
+                      seat.empty ? handleSeatPress.bind(this, seat.id) : null
+                    }>
+                    <SleeperSeat
+                      selected={seat.selected}
+                      empty={seat.empty}></SleeperSeat>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <View>
+              {row3.map(seat => {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    key={seat.id}
+                    style={styles.seat}
+                    onPress={
+                      seat.empty ? handleSeatPress.bind(this, seat.id) : null
+                    }>
+                    <SleeperSeat
+                      selected={seat.selected}
+                      empty={seat.empty}></SleeperSeat>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           </View>
         </View>
       </View>
@@ -153,33 +169,57 @@ export default function SleeperLayout({booked}) {
         </View>
         <View style={styles.seatcontainer}>
           <View>
-            <FlatList
-              data={row3}
-              keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
+            {row4.map(seat => {
+              return (
                 <TouchableOpacity
+                  activeOpacity={1}
+                  key={seat.id}
                   style={styles.seat}
-                  onPress={handleSeatPress.bind(this, item.id, row3, setRow3)}>
+                  onPress={
+                    seat.empty ? handleSeatPress.bind(this, seat.id) : null
+                  }>
                   <SleeperSeat
-                    selected={item.selected}
-                    empty={item.empty}></SleeperSeat>
+                    selected={seat.selected}
+                    empty={seat.empty}></SleeperSeat>
                 </TouchableOpacity>
-              )}></FlatList>
+              );
+            })}
           </View>
-          <View>
-            <FlatList
-              data={row4}
-              keyExtractor={item => item.id}
-              numColumns={2}
-              renderItem={({item, index}) => (
-                <TouchableOpacity
-                  style={styles.seat}
-                  onPress={handleSeatPress.bind(this, item.id, row4, setRow4)}>
-                  <SleeperSeat
-                    selected={item.selected}
-                    empty={item.empty}></SleeperSeat>
-                </TouchableOpacity>
-              )}></FlatList>
+          <View style={{flexDirection: 'row'}}>
+            <View>
+              {row5.map(seat => {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    key={seat.id}
+                    style={styles.seat}
+                    onPress={
+                      seat.empty ? handleSeatPress.bind(this, seat.id) : null
+                    }>
+                    <SleeperSeat
+                      selected={seat.selected}
+                      empty={seat.empty}></SleeperSeat>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <View>
+              {row6.map(seat => {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    key={seat.id}
+                    style={styles.seat}
+                    onPress={
+                      seat.empty ? handleSeatPress.bind(this, seat.id) : null
+                    }>
+                    <SleeperSeat
+                      selected={seat.selected}
+                      empty={seat.empty}></SleeperSeat>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           </View>
         </View>
       </View>
