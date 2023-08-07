@@ -10,6 +10,8 @@ import PassengerDetail from '../screen/PassengerDetail';
 import AboutUs from '../screen/AboutUs';
 import Profile from '../screen/Profile';
 import COLORS from '../constants/Colors';
+import BookingDetails from '../screen/BookingDetails';
+import BookingSuccess from '../screen/BookingSuccess';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,12 +31,35 @@ export default function AppStack() {
         options={{headerShown: false}}
       />
       <Stack.Screen name={ROUTES.BUSLIST} component={BusList} />
-      <Stack.Screen name={ROUTES.FILTERS} component={Filters} options={{headerStyle:{backgroundColor:COLORS.RED},headerTintColor:COLORS.WHITE}}/>
+      <Stack.Screen
+        name={ROUTES.FILTERS}
+        component={Filters}
+        options={{
+          headerStyle: {backgroundColor: COLORS.RED},
+          headerTintColor: COLORS.WHITE,
+        }}
+      />
       <Stack.Screen name={ROUTES.SEATALLOCATION} component={SeatAllocation} />
       <Stack.Screen name={ROUTES.BORDINGDROPING} component={BordingDropping} />
-      <Stack.Screen name={ROUTES.PASSENGERDETAIL} component={PassengerDetail} />
-      <Stack.Screen name={ROUTES.ABOUT} component={AboutUs}/>
-      <Stack.Screen name={ROUTES.PROFILE} component={Profile}/>
+      <Stack.Screen
+        name={ROUTES.PASSENGERDETAIL}
+        component={PassengerDetail}
+        options={{
+          headerStyle: {backgroundColor: COLORS.RED},
+          headerTintColor: COLORS.WHITE,
+        }}
+      />
+      <Stack.Screen
+        name={ROUTES.BOOKINGDETAILS}
+        component={BookingDetails}
+        options={{
+          headerStyle: {backgroundColor: COLORS.RED},
+          headerTintColor: COLORS.WHITE,
+        }}
+      />
+      <Stack.Screen name={ROUTES.ABOUT} component={AboutUs} />
+      <Stack.Screen name={ROUTES.PROFILE} component={Profile} />
+      <Stack.Screen name={ROUTES.BOOKINGSUCCESS} component={BookingSuccess} options={{headerShown: false}}/>
     </Stack.Navigator>
   );
 }

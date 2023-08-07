@@ -19,6 +19,7 @@ import NoBusesFound from '../components/NoBusesFound';
 import {getBusFilteredList} from '../API/busFilter';
 import ClearFilterButton from '../components/ClearFilterButton';
 import { sortAndFiltersActions } from '../redux/sortAndFilters';
+import capitalizeString from '../util/capitalizeString';
 
 export default function BusList({navigation, route}) {
   const [busListData, setBusListData] = useState('');
@@ -92,10 +93,6 @@ export default function BusList({navigation, route}) {
       }
     }
   }
-
-  const capitalizeString = str => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
 
   useLayoutEffect(() => {
     navigation.setOptions({

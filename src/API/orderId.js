@@ -1,15 +1,11 @@
-import {BASEURLB} from '../constants/Url';
 import {BASEURLP} from '../constants/Url';
 
-
-export async function getBusList(from,to,date,page) {
+export async function getOrderId(amount) {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
 
   var raw = JSON.stringify({
-    departure_location: from,
-    arrival_location: to,
-    departure_date: date,
+    amount: amount,
   });
 
   var requestOptions = {
@@ -20,12 +16,12 @@ export async function getBusList(from,to,date,page) {
   };
   try {
     const response = await fetch(
-      `${BASEURLP}/buses/getlocationpoints/?page=${page}`,
+      `${BASEURLP}/payment/get_payment`,
       requestOptions,
     );
     if (response.status === 200) {
       const result = await response.json();
-      return result;
+      return result.razorpay_id;
     } else {
       console.log(response.status);
       return 'noData';

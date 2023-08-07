@@ -7,11 +7,13 @@ const ROUTES = {
   FILTERS: "Filters",
   SEATALLOCATION: "SeatAllocation",
   BORDINGDROPING: "BordersDropingPoint",
-  PASSENGERDETAIL: "PassengerDetail",
+  PASSENGERDETAIL: "Passenger Detail",
   LOGIN:'Login',
   OTP: 'OTP',
   ABOUT : 'About',
   PROFILE : 'Profile',
+  BOOKINGDETAILS: 'Booking Details',
+  BOOKINGSUCCESS: 'Booking Success',
 };
 
 export default ROUTES;

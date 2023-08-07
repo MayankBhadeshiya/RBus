@@ -34,6 +34,7 @@ export default function SeatAllocation({navigation, route}) {
     navigation.navigate(ROUTES.BORDINGDROPING, {
       departureTime: departureTime,
       arrivalTime: arrivalTime,
+      title: title,
     });
   };
   useLayoutEffect(() => {

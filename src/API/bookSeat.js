@@ -1,15 +1,18 @@
-import {BASEURLB} from '../constants/Url';
-import {BASEURLP} from '../constants/Url';
+import { BASEURLB } from "../constants/Url";
 
-
-export async function getBusList(from,to,date,page) {
+export async function bookSeat(details, transaction_id) {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
 
   var raw = JSON.stringify({
-    departure_location: from,
-    arrival_location: to,
-    departure_date: date,
+    bus_id: details.bus_id,
+    booked_seats: details.booked_seats,
+    email: details.email,
+    phone_number: details.phone_number,
+    transaction_id: transaction_id,
+    amount: details.amount,
+    departure_location: details.startingPoint,
+    arrival_location: details.endingPoint,
   });
 
   var requestOptions = {
@@ -20,12 +23,12 @@ export async function getBusList(from,to,date,page) {
   };
   try {
     const response = await fetch(
-      `${BASEURLP}/buses/getlocationpoints/?page=${page}`,
+      `${BASEURLB}/buses/add_booked_seats`,
       requestOptions,
     );
     if (response.status === 200) {
       const result = await response.json();
-      return result;
+      return result.ticket_id;
     } else {
       console.log(response.status);
       return 'noData';

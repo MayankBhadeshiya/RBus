@@ -4,6 +4,7 @@ import authReducer from './auth';
 import sortAndFiltersReducer from './sortAndFilters';
 import busListReducer from './BusList';
 import busDetailReducer from './busDetails';
+import seatBookingReducer from './seatBooking';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     sortAndFiltersReducer,
     busListReducer,
     busDetailReducer,
+    seatBookingReducer,
   },
 });
 

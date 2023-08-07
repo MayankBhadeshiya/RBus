@@ -1,4 +1,5 @@
 import {BASEURLB} from '../constants/Url';
+import {BASEURLP} from '../constants/Url';
 
 export async function getBusFilteredList(from, to, date, filters, sortBy, page) {
   var myHeaders = new Headers();
@@ -37,7 +38,7 @@ export async function getBusFilteredList(from, to, date, filters, sortBy, page) 
   };
   try {
     const response = await fetch(
-      `${BASEURLB}/buses/get_buses_by_filter/?page=${page}`,
+      `${BASEURLP}/buses/get_buses_by_filter/?page=${page}`,
       requestOptions,
     );
     if (response.status === 200) {

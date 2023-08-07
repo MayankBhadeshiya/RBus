@@ -1,4 +1,6 @@
 import {BASEURLB} from '../constants/Url';
+import {BASEURLP} from '../constants/Url';
+
 
 export async function getBusSeat(id) {
   var myHeaders = new Headers();
@@ -16,7 +18,7 @@ export async function getBusSeat(id) {
   };
   try {
     const response = await fetch(
-      `${BASEURLB}/buses/get_available_seats`,
+      `${BASEURLP}/buses/get_available_seats`,
       requestOptions,
     );
     if (response.status === 200) {

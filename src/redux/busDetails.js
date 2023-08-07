@@ -30,6 +30,9 @@ const busDetailSlice = createSlice({
         );
       } else {
         state.selectedSeat.push(action.payload);
+        state.selectedSeat = state.selectedSeat.sort(function (a, b) {
+          return a - b;
+        });
       }
       state.Totalprice = state.selectedSeat.length * state.PriceOfOne;
     },
@@ -37,11 +40,19 @@ const busDetailSlice = createSlice({
       state.PriceOfOne = action.payload;
     },
     setId(state, action) {
-        if(state.busId !== action.payload){
-            state.busId = action.payload;
-            state.selectedSeat = [];
-            state.Totalprice = null;
-        }
+      if (state.busId !== action.payload) {
+        state.busId = action.payload;
+        state.selectedSeat = [];
+        state.Totalprice = null;
+      }
+    },
+    setClear(state) {
+      state.busId = null;
+      state.avilbleSeat = [];
+      state.bookedSeat = [];
+      state.selectedSeat = [];
+      state.PriceOfOne = null;
+      state.Totalprice = null;
     },
   },
 });

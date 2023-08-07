@@ -13,8 +13,15 @@ const busListSlice = createSlice({
   initialState,
   reducers: {
     setRouteDetails(state, action) {
-        state.routeDetails = action.payload
-    }
+      state.routeDetails = action.payload;
+    },
+    setClear(state) {
+      state.routeDetails = {
+        start: '',
+        end: '',
+        date: '',
+      };
+    },
   },
 });
 

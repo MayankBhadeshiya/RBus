@@ -1,11 +1,12 @@
 import {View, Text, FlatList, TouchableOpacity, SafeAreaView, StyleSheet} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useState} from 'react';
 import CustomSwitch from '../components/CustomSwitch';
 import BoardDrop from '../components/BoardDrop';
 import {useSelector} from 'react-redux';
 import CustomButtonFooter from '../components/CustomButtonFooter';
 import ROUTES from '../constants/Routes';
 import COLORS from '../constants/Colors';
+import capitalizeString from '../util/capitalizeString';
 
 export default function BordingDropping({navigation,route}) {
   const [selected, setSelected] = useState(1);
@@ -13,11 +14,16 @@ export default function BordingDropping({navigation,route}) {
   const [selectedDroppingPlace, setSelectedDroppingPlace] = useState('');
 
   const routeDetail = useSelector(state => state.busListReducer.routeDetails);
-  const capitalizeString = str => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
 
-  const {departureTime, arrivalTime} = route.params;
+   useLayoutEffect(() => {
+     navigation.setOptions({
+       title: `${capitalizeString(routeDetail.start)} - ${capitalizeString(
+         routeDetail.end,
+       )}`,
+     });
+   }, []);
+
+  const {departureTime, arrivalTime, title} = route.params;
 
   const boardingPoints = [
     {
@@ -33,7 +39,11 @@ export default function BordingDropping({navigation,route}) {
   ];
 
   const handlePress = () => {
-    navigation.navigate(ROUTES.PASSENGERDETAIL);
+    navigation.navigate(ROUTES.PASSENGERDETAIL, {
+      departureTime,
+      arrivalTime,
+      title,
+    });
   };
 
   return (

@@ -2,6 +2,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 import COLORS from '../constants/Colors';
 import {useSelector} from 'react-redux';
+import capitalizeString from '../util/capitalizeString';
 
 export default function SeatAllocationHeader({
   arrivalTime,
@@ -11,9 +12,6 @@ export default function SeatAllocationHeader({
   const date = new Date(departure_date);
   const routeDetail = useSelector(state => state.busListReducer.routeDetails);
 
-  const capitalizeString = str => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
   const BusRoute = `${capitalizeString(routeDetail.start)} - ${capitalizeString(
     routeDetail.end,
   )}`;
