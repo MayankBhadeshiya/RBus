@@ -6,7 +6,7 @@ export default function AboutUs()
     return(
         <View style={styles.container}>
             <Text style={styles.title}>
-                We are rBus
+                We are RBus
             </Text>
             <Text style={{color : COLORS.GRAY500}}>
                 This is a dummy project - Clone of RedBus.
