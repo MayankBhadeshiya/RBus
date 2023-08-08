@@ -21,6 +21,11 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
   const [pEmail, setPEmail] = useState('example@example.com');
   const [pPhon, setPphone] = useState('0000000000');
   const [values, setValues] = useState();
+  const [error, setError] = useState({
+    show: false,
+    email: true,
+    phone: true,
+  });
   const [isValid, setIsValid] = useState(false);
   const dispatch = useDispatch();
   const selectedSeat = useSelector(
@@ -35,9 +40,15 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
       setDetails(prev => {
         return {...prev, email: userDetails.email};
       });
+      setError(prev => {
+        return {...prev, email:false};
+      });
       if (userDetails.phone_number) {
         setDetails(prev => {
           return {...prev, phone: userDetails.phone_number};
+        });
+        setError(prev => {
+          return {...prev, phone: false};
         });
       }
     }
@@ -45,6 +56,10 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
       const data = new Array(selectedSeat.length)
         .fill()
         .map(i => ({username: '', age: '', gender: 'male'}));
+      const errordata = new Array(selectedSeat.length)
+        .fill()
+        .map(i => ({username: true, age: true}));
+      setError(error => ({...error, users: errordata}));
       setValues(data);
     }
   }, []);
@@ -52,21 +67,41 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
     const email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const phone = /^[6-9]\d{9}$/;
     const userName = /^[a-zA-Z]+[a-zA-Z\s]*[a-zA-Z]+$/;
-    if (email.test(details.email) && phone.test(details.phone)) {
-      for (let i of values) {
-        if (
-          !(
-            userName.test(i.username) &&
-            !isNaN(parseInt(i.age)) &&
-            +i.age > 0 &&
-            +i.age < 120 &&
-            (i.gender === 'male' || i.gender === 'female')
-          )
-        ) {
-          return setIsValid(false);
-        }
-      }
+    let flag = false;
+
+    if (email.test(details.email)) {
+      error.email = false;
     } else {
+      flag = true;
+      error.email = true;
+    }
+    if (phone.test(details.phone)) {
+      error.phone = false;
+    } else {
+      flag = true;
+      error.phone = true;
+    }
+
+    for (let i in values) {
+      if (userName.test(values[i].username)) {
+        error.users[i].username = false;
+      } else {
+        flag = true;
+        error.users[i].username = true;
+      }
+      if (
+        !isNaN(parseInt(values[i].age)) &&
+        +values[i].age > 0 &&
+        +values[i].age < 120
+      ) {
+        error.users[i].age = false;
+      } else {
+        flag = true;
+        error.users[i].age = true;
+      }
+    }
+    setError({...error});
+    if (flag) {
       return setIsValid(false);
     }
     return setIsValid(true);
@@ -115,7 +150,8 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
         }),
       );
       navigation.navigate(ROUTES.BOOKINGDETAILS);
-      console.log('valid');
+    }else {
+      setError((error)=>{return {...error, show: true} })
     }
   };
   return (
@@ -144,6 +180,9 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
             onFocus={() => {
               setPEmail('example@example.com');
             }}></TextInput>
+          {error.show && error.email && (
+            <Text style={styles.errortext}>Enter valid email</Text>
+          )}
           <Text style={styles.inputLable}>Phone</Text>
           <TextInput
             keyboardType="phone-pad"
@@ -164,6 +203,9 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
             onFocus={() => {
               setPphone('0000000000');
             }}></TextInput>
+          {error.show && error.phone && (
+            <Text style={[styles.errortext, {marginBottom:10}]}>Enter valid Phone no.</Text>
+          )}
         </View>
         <Text style={styles.viewLable}>Passenger Information</Text>
         <View>
@@ -186,6 +228,9 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
                   onChangeText={text =>
                     onChangeDetail(i, 'username', text.trim())
                   }></TextInput>
+                {error.show && error.users[i].username && (
+                  <Text style={styles.errortext}>Enter valid name</Text>
+                )}
                 <Text style={styles.inputLable}>Age</Text>
                 <TextInput
                   keyboardType="number-pad"
@@ -197,6 +242,9 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
                   value={values ? values[i]['age'] : ''}
                   onChangeText={text => onChangeDetail(i, 'age', text.trim())}
                   maxLength={10}></TextInput>
+                {error.show && error.users[i].age && (
+                  <Text style={styles.errortext}>Enter valid age</Text>
+                )}
                 <View style={styles.genderContainer}>
                   <Text style={styles.inputLable}>Gender</Text>
                   <TouchableOpacity
@@ -351,5 +399,8 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontWeight: '800',
     fontSize: 15,
+  },
+  errortext: {
+    color: COLORS.RED,
   },
 });

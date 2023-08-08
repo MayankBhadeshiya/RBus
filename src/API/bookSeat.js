@@ -1,4 +1,5 @@
-import { BASEURLB } from "../constants/Url";
+import {BASEURLB} from '../constants/Url';
+import {BASEURLP} from '../constants/Url';
 
 export async function bookSeat(details, transaction_id) {
   var myHeaders = new Headers();
@@ -23,12 +24,12 @@ export async function bookSeat(details, transaction_id) {
   };
   try {
     const response = await fetch(
-      `${BASEURLB}/buses/add_booked_seats`,
+      `${BASEURLP}/buses/add_booked_seats`,
       requestOptions,
     );
     if (response.status === 200) {
       const result = await response.json();
-      return result.ticket_id;
+      return result;
     } else {
       console.log(response.status);
       return 'noData';

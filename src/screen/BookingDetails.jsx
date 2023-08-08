@@ -16,16 +16,13 @@ import Loader from '../components/Loader';
 import SomethingWentWrong from '../components/SomethingWentWrong';
 import RazorpayCheckout from 'react-native-razorpay';
 import ROUTES from '../constants/Routes';
-import {bookSeat} from '../API/bookSeat';
 
 export default function BookingDetails({navigation}) {
   const bookingdetails = useSelector(state => state.seatBookingReducer);
   const connected = useSelector(state => state.connectionReducer.connection);
   const [error, setError] = useState(false);
-  const [isBooked, setIsBooked] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const [orderID, setOrderID] = useState('');
-  const [ticket_id, setTicket_id] = useState('');
   async function get() {
     setIsloading(true);
     const id = await getOrderId(bookingdetails.amount);
@@ -38,17 +35,6 @@ export default function BookingDetails({navigation}) {
     }
   }
 
-  async function book(razorpay_payment_id) {
-    setIsloading(true);
-    const id = await bookSeat(bookingdetails, razorpay_payment_id);
-    setIsloading(false);
-    if (id === 'noData') {
-      setIsBooked(false);
-    } else {
-      setIsBooked(true);
-      setTicket_id(id);
-    }
-  }
   useEffect(() => {
     if (connected) {
       get();
@@ -69,9 +55,7 @@ export default function BookingDetails({navigation}) {
       key: 'rzp_test_zJ8QvS3EjoLDEc',
       amount: bookingdetails.amount * 100,
       name: 'RBus',
-      order_id: orderID, //Replace this with an order_id created using Orders API.
-      //   callback_url: `/${ROUTES.BOOKINGSUCCESS}`,
-      //   redirect: true,
+      order_id: orderID,
       prefill: {
         email: bookingdetails.email,
         contact: bookingdetails.phone_number,
@@ -82,19 +66,9 @@ export default function BookingDetails({navigation}) {
     RazorpayCheckout.open(options)
       .then(data => {
         // handle success
-        async function run() {
-          await book(data.razorpay_payment_id);
-          console.log(isBooked);
-          if (isBooked) {
-            navigation.navigate(ROUTES.BOOKINGSUCCESS, {
-              paymentId: data.razorpay_payment_id,
-              ticket_id: ticket_id,
-            });
-          } else {
-            alert(`Error | Ticket is not booked. Please try again later`);
-          }
-        }
-        run();
+        navigation.navigate(ROUTES.BOOKINGSUCCESS, {
+          paymentId: data.razorpay_payment_id,
+        });
       })
       .catch(error => {
         // handle failure

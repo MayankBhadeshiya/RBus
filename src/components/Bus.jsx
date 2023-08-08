@@ -24,15 +24,41 @@ export default function Bus({data}) {
   } else if (data.type === 2 && data.bus_type === 2) {
     busType = 'NON A/C Sleeper';
   }
-  const extractTime = time => {
-    const date = new Date(time);
-    const hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes();
+  const extractArrivalTime = (arrivalTime, departureTime) => {
+    const date = new Date(arrivalTime);
+    const currentDate = new Date(departureTime);
+    const sameday =
+      date.getFullYear() === currentDate.getFullYear() &&
+      date.getMonth() === currentDate.getMonth() &&
+      date.getDate() === currentDate.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
       .toString()
       .padStart(2, '0')}`;
+    if (!sameday) {
+      const d = date.toLocaleDateString(undefined, {
+        day: 'numeric',
+        month: 'short',
+      });
+
+      return formattedTime + ' ' + d;
+    } else {
+      return formattedTime;
+    }
+  };
+  const extractDepattureTime = departureTime => {
+
+    const date = new Date(departureTime);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`;
+
     return formattedTime;
   };
+
   const findDuration = (startDateStr, endDateStr) => {
     const startDate = new Date(startDateStr);
     const endDate = new Date(endDateStr);
@@ -50,10 +76,6 @@ export default function Bus({data}) {
   const isDeparted = givenTimeStr => {
     const givenTime = new Date(givenTimeStr);
     const currentTime = new Date();
-    currentTime.setHours(
-      currentTime.getHours() + 5,
-      currentTime.getMinutes() + 30,
-    );
     const timeDifferenceMs = givenTime - currentTime;
     const isDifferenceLessThanOneHour = timeDifferenceMs < 3600000;
 
@@ -65,8 +87,8 @@ export default function Bus({data}) {
         title: data.bus_name,
         headerRight: data.ratings,
         id: data.id,
-        departureTime: extractTime(data.departure_date),
-        arrivalTime: extractTime(data.arrival_date),
+        departureTime: extractDepattureTime(data.departure_date),
+        arrivalTime: extractArrivalTime(data.arrival_date, data.departure_date),
         departure_date: data.departure_date,
         price: data.fare,
       });
@@ -83,9 +105,9 @@ export default function Bus({data}) {
       <View style={styles.TimeAndPriceContainer}>
         <Text style={styles.durationText}>
           <Text style={styles.boldLetter}>
-            {extractTime(data.departure_date)}
+            {extractDepattureTime(data.departure_date)}
           </Text>{' '}
-          - {extractTime(data.arrival_date)}
+          - {extractArrivalTime(data.arrival_date, data.departure_date)}
         </Text>
         <Text style={styles.boldLetter}> ₹ {data.fare}</Text>
       </View>
@@ -135,7 +157,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLACK,
   },
   boldLetter: {
-    fontWeight:Platform.OS==='ios' ? 'bold' : '900',
+    fontWeight: Platform.OS === 'ios' ? 'bold' : '900',
     color: COLORS.BLACK,
   },
   grayLetter: {
