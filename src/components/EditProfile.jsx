@@ -7,8 +7,14 @@ import {
 } from 'react-native';
 import COLORS from '../constants/Colors';
 import {useEffect, useState} from 'react';
-export default function EditProfile({data}) {
-
+import { updateProfile } from '../API/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from '../redux/auth';
+import Loader from './Loader';
+import SomethingWentWrong from './SomethingWentWrong';
+export default function EditProfile({data, editHandler}) {
+  const token = useSelector(state => state.authReducer.token);
+  const dispatch = useDispatch()
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [contactNo, setContactNo] = useState('');
@@ -16,13 +22,28 @@ export default function EditProfile({data}) {
   const [nameError , setNameError] = useState(false);
   const [ageError , setAgeError] = useState(false);
   const [contactNoError , setContactNoError] = useState(false);
+  const [error, setError] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
 
   useEffect(()=>{
-    setName(data.full_name);
-    setAge(data.age.toString());
-    setContactNo(data.phone_number);
-    setGender(data.gender);
+    {data.full_name ? setName(data.full_name) : null}
+    {data.age ? setAge(data.age.toString()) : null}
+    {data.phone_number ? setContactNo(data.phone_number) : null}
+    {data.gender ? setGender(data.gender) : null};
   },[data]);
+
+  async function get(user) {
+    setIsloading(true);
+    const userData = await updateProfile(token, user);
+    setIsloading(false);
+    if (userData.result === 'noData') {
+      setError(true);
+    } else {
+      setError(false);
+      dispatch(authActions.setUser({...data, full_name:user.name, age:user.age, phone_number:user.phone, gender:user.gender}));
+      editHandler()
+    }
+  }
 
   function updateHandler()
   {
@@ -34,7 +55,7 @@ export default function EditProfile({data}) {
     {
       setAgeError(true);
     }
-    else if(contactNo.trim() == '' || contactNo.length == 10)
+    else if(contactNo.trim() == '' || contactNo.length < 10)
     {
       setContactNoError(true)
     }
@@ -43,8 +64,20 @@ export default function EditProfile({data}) {
       setNameError(false);
       setAgeError(false);
       setContactNoError(false);
-      console.log(name , age, contactNo , gender);
+      const user = {
+        name: name,
+        phone: contactNo,
+        age: age,
+        gender: gender,
+      }
+      get(user);
     }
+  }
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (error) {
+    return <SomethingWentWrong />;
   }
   return (
     <View>

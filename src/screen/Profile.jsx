@@ -3,12 +3,14 @@ import COLORS from '../constants/Colors';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import { useRoute } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditProfile from "../components/EditProfile";
+import { useSelector } from 'react-redux';
+
 export default function Profile()
 {
     const route = useRoute();
-    const details = route.params.details;
+    const details = useSelector(state => state.authReducer.userDetails);
     const [edit , setEdit] = useState(false);
     
     function editHandler()
@@ -21,7 +23,7 @@ export default function Profile()
                 <Text style={styles.title}>PERSONAL DETAILS</Text>
                 <Feather name={!edit ? 'edit' : null} size={20} color={COLORS.GRAY500} onPress={editHandler}/>
             </View>
-            {edit ? <EditProfile data = {details}/> : <>
+            {edit ? <EditProfile data = {details} editHandler={editHandler}/> : <>
                 <View style={styles.subContainer}>
                     <EvilIcons name='user' size={55} color={COLORS.GRAY500}/>
                     <View style={{marginLeft : 10}}>
