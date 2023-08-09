@@ -2,7 +2,7 @@ import { View, StyleSheet, SafeAreaView, StatusBar, Image, TouchableOpacity } fr
 import React from 'react'
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import IMGS from '../constants/Img';
-import {windowWidth} from '../constants/Dimensions';
+import {windowWidth} from '../constants/Dimensions';  
 import COLORS from '../constants/Colors';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../redux/auth';
