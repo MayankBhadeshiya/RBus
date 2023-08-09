@@ -3,6 +3,8 @@ import COLORS from '../constants/Colors';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../constants/Routes';
+import isDeparted from '../util/isDeparted';
+import { extractArrivalTime, extractDepattureTime } from '../util/extractTime';
 
 export default function Bus({data}) {
   const navigation = useNavigation();
@@ -24,40 +26,7 @@ export default function Bus({data}) {
   } else if (data.type === 2 && data.bus_type === 2) {
     busType = 'NON A/C Sleeper';
   }
-  const extractArrivalTime = (arrivalTime, departureTime) => {
-    const date = new Date(arrivalTime);
-    const currentDate = new Date(departureTime);
-    const sameday =
-      date.getFullYear() === currentDate.getFullYear() &&
-      date.getMonth() === currentDate.getMonth() &&
-      date.getDate() === currentDate.getDate();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
-    if (!sameday) {
-      const d = date.toLocaleDateString(undefined, {
-        day: 'numeric',
-        month: 'short',
-      });
-
-      return formattedTime + ' ' + d;
-    } else {
-      return formattedTime;
-    }
-  };
-  const extractDepattureTime = departureTime => {
-
-    const date = new Date(departureTime);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
-
-    return formattedTime;
-  };
+  
 
   const findDuration = (startDateStr, endDateStr) => {
     const startDate = new Date(startDateStr);
@@ -71,15 +40,6 @@ export default function Bus({data}) {
       .toString()
       .padStart(2, '0')}m`;
     return formattedTime;
-  };
-
-  const isDeparted = givenTimeStr => {
-    const givenTime = new Date(givenTimeStr);
-    const currentTime = new Date();
-    const timeDifferenceMs = givenTime - currentTime;
-    const isDifferenceLessThanOneHour = timeDifferenceMs < 3600000;
-
-    return isDifferenceLessThanOneHour;
   };
   const handlePress = () => {
     if (!isDeparted(data.departure_date)) {

@@ -15,6 +15,7 @@ import {seatBookingActions} from '../redux/seatBooking';
 import {sortAndFiltersActions} from '../redux/sortAndFilters';
 import {bookSeat} from '../API/bookSeat';
 import Loader from '../components/Loader';
+import { authActions } from '../redux/auth';
 
 export default function BookingStatus({navigation, route}) {
   const {paymentId} = route.params;
@@ -46,6 +47,7 @@ export default function BookingStatus({navigation, route}) {
       setIsBooked(true);
       setMsg('');
       setTicket_id(result.ticket_id);
+      dispatch(authActions.bookedTicket(result.ticket_id));
     }
   }
   useEffect(() => {

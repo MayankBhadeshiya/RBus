@@ -4,7 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const initialState = {
   inAuth: false,
   token: '',
-  userDetails: {}
+  userDetails: {},
+  ticketBookedDuringThisSession: []
 };
 
 const authSlice = createSlice({
@@ -21,6 +22,9 @@ const authSlice = createSlice({
     setUser(state, action) {
       state.userDetails = action.payload;
       AsyncStorage.setItem('User', JSON.stringify(state.userDetails));
+    },
+    bookedTicket(state, action) {
+      state.ticketBookedDuringThisSession.push(action.payload);
     }
   },
 });
