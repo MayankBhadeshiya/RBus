@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux';
 
 export default function Profile()
 {
-    const route = useRoute();
     const details = useSelector(state => state.authReducer.userDetails);
     const [edit , setEdit] = useState(false);
     
