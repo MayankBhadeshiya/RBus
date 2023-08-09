@@ -19,7 +19,7 @@ export default function Profile()
         <View style={styles.container}>
             <View style={[styles.subContainer , {justifyContent : 'space-between', alignItems : 'baseline'}]}>
                 <Text style={styles.title}>PERSONAL DETAILS</Text>
-                <Feather name={!edit ? 'edit' : 'check-square'} size={20} color={COLORS.GRAY500} onPress={editHandler}/>
+                <Feather name={!edit ? 'edit' : null} size={20} color={COLORS.GRAY500} onPress={editHandler}/>
             </View>
             {edit ? <EditProfile data = {details}/> : <>
                 <View style={styles.subContainer}>
@@ -28,7 +28,7 @@ export default function Profile()
                         {details.full_name ? <Text style={styles.details}>Name : {details.full_name}</Text> : null}
                         {details.email ? <Text style={styles.details}>Email : {details.email}</Text> : null}
                         {details.age ? <Text style={styles.details}>Age : {details.age}</Text> : null}
-                        <Text style={styles.details}>Gender : {details.gender === 1 ? 'Male' : userDetails.gender === 2 ? 'Female' : 'Others'}</Text>
+                        {details.gender ? <Text style={styles.details}>Gender : {details.gender === 1 ? 'Male' : details.gender === 2 ? 'Female' : 'Others'}</Text> : null}
                         {details.phone_number ? <Text style={styles.details}>Contact No : {details.phone_number}</Text> : null}
                     </View>
                 </View>
