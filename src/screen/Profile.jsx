@@ -2,8 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import COLORS from '../constants/Colors';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import { useRoute } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import EditProfile from "../components/EditProfile";
 import { useSelector } from 'react-redux';
 
