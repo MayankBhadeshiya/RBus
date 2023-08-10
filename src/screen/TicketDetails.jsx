@@ -21,21 +21,28 @@ export default function TicketDetails() {
 
   const route = useRoute();
   const ticketId = route.params.id;
-  console.log(ticketId);
 
   async function get()
   {
     setIsloading(true);
     const Ticket = await showTicket(authData.userDetails.email , ticketId);
     setIsloading(false);
-    setTicketData(Ticket);
+    if(Ticket === 'noData')
+    {
+      setError(true);
+    }
+    else
+    {
+      setError(false);
+      setTicketData(Ticket);
+    }
   }
 
   useEffect(() => {
-    if (connected && authData.token !== '') {
+    if (connected) {
       get();
     }
-  },[connected, authData.ticketBookedDuringThisSession]);
+  }, [connected]);
 
   if (authData.token === '') {
     return (
@@ -60,10 +67,12 @@ export default function TicketDetails() {
   ];
 
   return (
+    
     <View style={{backgroundColor:COLORS.WHITE , flex : 1}}>
+      {ticketData  && <Text>ticket data available</Text>}
       <View style={styles.routeContainer}>
         <View style={styles.routeFirstContainer}>
-          <Text style={styles.cityName}>{capitalizeString(ticket)}</Text>
+          <Text style={styles.cityName}>{capitalizeString('asdfg')}</Text>
           <Text style={styles.BlackFont}>{'10:12'}</Text>
         </View>
         <View style={styles.routeSecondContainer}>
@@ -75,7 +84,7 @@ export default function TicketDetails() {
           <Text style={styles.date}>5, aug</Text>
         </View>
         <View style={styles.routeThirdContainer}>
-          <Text style={styles.cityName}>{capitalizeString('mumbai')}</Text>
+          <Text style={styles.cityName}>{capitalizeString('asdf')}</Text>
           <Text style={styles.BlackFont}>{'12:00'}</Text>
         </View>
       </View>
