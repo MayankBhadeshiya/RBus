@@ -18,6 +18,7 @@ const navigation = useNavigation();
  const handlePress = () => {
     navigation.navigate(ROUTES.TICKETDETAILS, {id: data.ticket_id});
  }
+ console.log(data);
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress}>
       <Text>From : {capitalizeString(data.departure_location)}</Text>

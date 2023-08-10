@@ -1,15 +1,69 @@
-import {View, Text, StyleSheet} from 'react-native';
-import React from 'react';
+import {View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity} from 'react-native';
+import React, { useEffect , useState } from 'react';
 import COLORS from '../constants/Colors';
 import capitalizeString from '../util/capitalizeString';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import TicketSubDetail from '../components/TicketSubDetail';
+import { useRoute } from '@react-navigation/native';
+import { showTicket } from '../API/user';
+import {useSelector} from 'react-redux';
+import MyAccountnotLogin from '../components/MyAccountnotLogin';
+import Loader from '../components/Loader';
+import SomethingWentWrong from '../components/SomethingWentWrong';
+
 
 export default function TicketDetails() {
+  const authData = useSelector(state => state.authReducer);
+  const connected = useSelector(state => state.connectionReducer.connection);
+  const [isLoading, setIsloading] = useState(false);
+  const [error, setError] = useState(false);
+  const [ticketData , setTicketData] = useState([]);
+
+  const route = useRoute();
+  const ticketId = route.params.id;
+  console.log(ticketId);
+
+  async function get()
+  {
+    setIsloading(true);
+    const Ticket = await showTicket(authData.userDetails.email , ticketId);
+    setIsloading(false);
+    setTicketData(Ticket);
+  }
+
+  useEffect(() => {
+    if (connected && authData.token !== '') {
+      get();
+    }
+  },[connected, authData.ticketBookedDuringThisSession]);
+
+  if (authData.token === '') {
+    return (
+      <MyAccountnotLogin lable="Sign up or Login to track your bookings" />
+    );
+  }
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (error) {
+    return <SomethingWentWrong />;
+  }
+  
+
+  const subDetails = [
+    {
+      seat_no : '12',
+      passenger_name : 'abcd',
+      passenger_age : '20',
+      gender : '1'
+    },
+  ];
+
   return (
-    <View style={{backgroundColor:COLORS.WHITE}}>
+    <View style={{backgroundColor:COLORS.WHITE , flex : 1}}>
       <View style={styles.routeContainer}>
         <View style={styles.routeFirstContainer}>
-          <Text style={styles.cityName}>{capitalizeString('Ahmedabad')}</Text>
+          <Text style={styles.cityName}>{capitalizeString(ticket)}</Text>
           <Text style={styles.BlackFont}>{'10:12'}</Text>
         </View>
         <View style={styles.routeSecondContainer}>
@@ -28,17 +82,28 @@ export default function TicketDetails() {
       <View style={styles.commenDetails}>
         <View style={styles.detail}>
           <Text style={styles.GrayFont}>Ticket ID :- </Text>
-          <Text style={styles.BlackFont}>123456789123456789123456789</Text>
+          <Text style={styles.BlackFont}>{ticketId}</Text>
         </View>
         <View style={styles.detail}>
           <Text style={styles.GrayFont}>Email ID :- </Text>
-          <Text style={styles.BlackFont}>190020116002ait@gmail.com</Text>
+          <Text style={styles.BlackFont}>{authData.userDetails.email}</Text>
         </View>
         <View style={styles.detail}>
           <Text style={styles.GrayFont}>Phone No. :- </Text>
-          <Text style={styles.BlackFont}>9988556677</Text>
+          <Text style={styles.BlackFont}>{authData.userDetails.phone_number}</Text>
         </View>
       </View>
+      <View style={{flex : 1}}>
+        <FlatList
+          data={subDetails}
+          renderItem={({item}) => <TicketSubDetail data={item}/>}
+        />
+      </View>
+      <TouchableOpacity style={styles.cancelButton}>
+        <Text style={styles.cancelButtonText}>
+          Cancel
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -48,6 +113,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     margin: 20,
+
   },
   routeFirstContainer: {
     flex: 1,
@@ -82,5 +148,17 @@ const styles = StyleSheet.create({
   detail:{
     flexDirection: 'row',
     marginVertical: 5
+  },
+  cancelButton : {
+    alignItems : 'center',
+    justifyContent : 'center',
+    padding : 10,
+    backgroundColor : COLORS.DANGER,
+    marginTop : 5,
+
+  },
+  cancelButtonText : {
+    color : COLORS.WHITE,
+    fontWeight : 'bold',
   }
 });

@@ -123,3 +123,43 @@ export async function getTickets(email) {
     return 'noData';
   }
 }
+
+export async function showTicket(email , ticket_id)
+{
+  var myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+
+  var raw = JSON.stringify({
+    email : email,
+    ticket_id : ticket_id
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  };
+
+  try 
+  {
+    const response = await fetch(`${BASEURLP}/buses/show_ticket`,
+    requestOptions,);
+
+    if(response.status === 200)
+    {
+      const result = await response.json();
+      return result.data;
+    }
+    else
+    {
+      console.log(response.status);
+      return 'noData';
+    }
+  } 
+  catch(error) 
+  {
+    console.log(error.message);
+    return 'noData';
+  }
+}
