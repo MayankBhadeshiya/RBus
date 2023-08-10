@@ -1,40 +1,56 @@
-import {View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity} from 'react-native';
-import React, { useEffect , useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import COLORS from '../constants/Colors';
 import capitalizeString from '../util/capitalizeString';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TicketSubDetail from '../components/TicketSubDetail';
-import { useRoute } from '@react-navigation/native';
-import { showTicket } from '../API/user';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {showTicket} from '../API/user';
 import {useSelector} from 'react-redux';
 import MyAccountnotLogin from '../components/MyAccountnotLogin';
 import Loader from '../components/Loader';
 import SomethingWentWrong from '../components/SomethingWentWrong';
-
+import { extractArrivalTime, extractDepattureTime } from '../util/extractTime';
+import isDeparted from '../util/isDeparted';
+import ROUTES from '../constants/Routes';
 
 export default function TicketDetails() {
   const authData = useSelector(state => state.authReducer);
   const connected = useSelector(state => state.connectionReducer.connection);
   const [isLoading, setIsloading] = useState(false);
   const [error, setError] = useState(false);
-  const [ticketData , setTicketData] = useState([]);
+  const [ticketData, setTicketData] = useState([]);
+  const navigation = useNavigation();
 
   const route = useRoute();
   const ticketId = route.params.id;
 
-  async function get()
-  {
+  const findDate = date => {
+    const originalDate = new Date(date);
+
+    return originalDate.toLocaleDateString(undefined, {
+      day: 'numeric',
+      month: 'short',
+    });
+ }
+  
+  async function get() {
     setIsloading(true);
-    const Ticket = await showTicket(authData.userDetails.email , ticketId);
-    setIsloading(false);
-    if(Ticket === 'noData')
-    {
+    const Ticket = await showTicket(authData.userDetails.email, ticketId);
+    if (Ticket === 'noData') {
       setError(true);
-    }
-    else
-    {
+    } else {
       setError(false);
       setTicketData(Ticket);
+      setIsloading(false);
     }
   }
 
@@ -49,71 +65,92 @@ export default function TicketDetails() {
       <MyAccountnotLogin lable="Sign up or Login to track your bookings" />
     );
   }
+
   if (isLoading) {
     return <Loader />;
   }
+
   if (error) {
     return <SomethingWentWrong />;
   }
   
 
-  const subDetails = [
+  function CancelTicketHandler()
+  {
+    const seatNumbers = [];
+    for(let i=0;i<ticketData.length;i++)
     {
-      seat_no : '12',
-      passenger_name : 'abcd',
-      passenger_age : '20',
-      gender : '1'
-    },
-  ];
+      seatNumbers.push(ticketData[i].seat_number);
+    }
+    console.log(seatNumbers);
+    Alert.alert('Ticket Cancellation' , 'You are about to cancel your bus ticket!' , [
+      {
+        text : 'Back',
+        style : 'cancel'
+      },
+      {
+        text : 'Yes, I Want!',
+        style : 'destructive',
+        onPress : () => navigation.navigate(ROUTES.CANCELTICKET , 
+          { ticketId : ticketId , email : authData.userDetails.email , seat_numbers : seatNumbers , bus_id : ticketData[0].bus_id})
+      },
+    ]);
+  }
 
   return (
-    
-    <View style={{backgroundColor:COLORS.WHITE , flex : 1}}>
-      {ticketData  && <Text>ticket data available</Text>}
-      <View style={styles.routeContainer}>
-        <View style={styles.routeFirstContainer}>
-          <Text style={styles.cityName}>{capitalizeString('asdfg')}</Text>
-          <Text style={styles.BlackFont}>{'10:12'}</Text>
+    <>
+      {ticketData.length > 0 && (
+        <View style={{backgroundColor: COLORS.WHITE, flex: 1}}>
+          <View style={styles.routeContainer}>
+            <View style={styles.routeFirstContainer}>
+              <Text style={styles.cityName}>{capitalizeString(ticketData[0].departure_location)}</Text>
+              <Text style={styles.BlackFont}>{extractDepattureTime(ticketData[0].departure_date)}</Text>
+            </View>
+            <View style={styles.routeSecondContainer}>
+              <MaterialIcons
+                name="arrow-right-alt"
+                size={30}
+                color={COLORS.BLACK}
+              />
+              <Text style={styles.date}>{findDate(ticketData[0].departure_date)}</Text>
+            </View>
+            <View style={styles.routeThirdContainer}>
+              <Text style={styles.cityName}>{capitalizeString(ticketData[0].arrival_location)}</Text>
+              <Text style={styles.BlackFont}>{extractArrivalTime(ticketData[0].arrival_date , ticketData[0].departure_date)}</Text>
+            </View>
+          </View>
+          <View style={styles.commenDetails}>
+            <View style={styles.detail}>
+              <Text style={styles.GrayFont}>Ticket ID :- </Text>
+              <Text style={styles.BlackFont}>{ticketId}</Text>
+            </View>
+            <View style={styles.detail}>
+              <Text style={styles.GrayFont}>Email ID :- </Text>
+              <Text style={styles.BlackFont}>{authData.userDetails.email}</Text>
+            </View>
+            <View style={styles.detail}>
+              <Text style={styles.GrayFont}>Phone No. :- </Text>
+              <Text style={styles.BlackFont}>
+                {authData.userDetails.phone_number}
+              </Text>
+            </View>
+            <View style={styles.detail}>
+              <Text style={styles.GrayFont}>Travel Agency Name :- </Text>
+              <Text style={styles.BlackFont}>{ticketData[0].bus_name}</Text>
+            </View>
+          </View>
+          <View style={{flex: 1}}>
+            <FlatList
+              data={ticketData}
+              renderItem={({item}) => <TicketSubDetail data={item} />}
+            />
+          </View>
+          {!isDeparted(ticketData[0].departure_date) ? <TouchableOpacity style={styles.cancelButton} onPress={CancelTicketHandler}>
+            <Text style={styles.cancelButtonText}>Cancel Ticket</Text>
+          </TouchableOpacity> : <></>}
         </View>
-        <View style={styles.routeSecondContainer}>
-          <MaterialIcons
-            name="arrow-right-alt"
-            size={30}
-            color={COLORS.BLACK}
-          />
-          <Text style={styles.date}>5, aug</Text>
-        </View>
-        <View style={styles.routeThirdContainer}>
-          <Text style={styles.cityName}>{capitalizeString('asdf')}</Text>
-          <Text style={styles.BlackFont}>{'12:00'}</Text>
-        </View>
-      </View>
-      <View style={styles.commenDetails}>
-        <View style={styles.detail}>
-          <Text style={styles.GrayFont}>Ticket ID :- </Text>
-          <Text style={styles.BlackFont}>{ticketId}</Text>
-        </View>
-        <View style={styles.detail}>
-          <Text style={styles.GrayFont}>Email ID :- </Text>
-          <Text style={styles.BlackFont}>{authData.userDetails.email}</Text>
-        </View>
-        <View style={styles.detail}>
-          <Text style={styles.GrayFont}>Phone No. :- </Text>
-          <Text style={styles.BlackFont}>{authData.userDetails.phone_number}</Text>
-        </View>
-      </View>
-      <View style={{flex : 1}}>
-        <FlatList
-          data={subDetails}
-          renderItem={({item}) => <TicketSubDetail data={item}/>}
-        />
-      </View>
-      <TouchableOpacity style={styles.cancelButton}>
-        <Text style={styles.cancelButtonText}>
-          Cancel
-        </Text>
-      </TouchableOpacity>
-    </View>
+      )}
+    </>
   );
 }
 
@@ -122,7 +159,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     margin: 20,
-
   },
   routeFirstContainer: {
     flex: 1,
@@ -151,23 +187,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.BLACK,
   },
-  commenDetails:{
-    marginHorizontal: 20
+  commenDetails: {
+    marginHorizontal: 20,
   },
-  detail:{
+  detail: {
     flexDirection: 'row',
-    marginVertical: 5
+    marginVertical: 5,
   },
-  cancelButton : {
-    alignItems : 'center',
-    justifyContent : 'center',
-    padding : 10,
-    backgroundColor : COLORS.DANGER,
-    marginTop : 5,
-
+  cancelButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: COLORS.DANGER,
+    margin: 10,
+    borderRadius : 10,
   },
-  cancelButtonText : {
-    color : COLORS.WHITE,
-    fontWeight : 'bold',
-  }
+  cancelButtonText: {
+    color: COLORS.WHITE,
+    fontWeight: 'bold',
+    fontSize : 20,
+  },
 });

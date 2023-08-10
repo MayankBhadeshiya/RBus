@@ -15,6 +15,7 @@ const ROUTES = {
   BOOKINGDETAILS: 'Booking Details',
   BOOKINGSUCCESS: 'Booking Success',
   TICKETDETAILS: 'Ticket Details',
+  CANCELTICKET : '  Cancel Ticket',
 };
 
 export default ROUTES;

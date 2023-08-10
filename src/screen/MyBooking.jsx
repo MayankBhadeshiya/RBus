@@ -37,6 +37,7 @@ export default function MyBooking() {
           arrival_location: a[0].arrival_location,
           no_of_tickets: a.length,
           amount: a[0].amount,
+          travel_agency_name : a[0].bus_name, 
         };
         if (isDeparted(obj.departure_date)) {
           departedList.push(obj);

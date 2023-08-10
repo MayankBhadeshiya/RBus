@@ -13,6 +13,7 @@ import COLORS from '../constants/Colors';
 import BookingDetails from '../screen/BookingDetails';
 import BookingStatus from '../screen/BookingStatus';
 import TicketDetails from '../screen/TicketDetails';
+import CancelTicket from '../screen/CancelTicket';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +67,7 @@ export default function AppStack() {
       <Stack.Screen name={ROUTES.ABOUT} component={AboutUs} />
       <Stack.Screen name={ROUTES.PROFILE} component={Profile} />
       <Stack.Screen name={ROUTES.TICKETDETAILS} component={TicketDetails} />
+      <Stack.Screen name={ROUTES.CANCELTICKET} component={CancelTicket} options={{headerShown : false}}/>
     </Stack.Navigator>
   );
 }

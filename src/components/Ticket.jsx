@@ -18,7 +18,7 @@ const navigation = useNavigation();
  const handlePress = () => {
     navigation.navigate(ROUTES.TICKETDETAILS, {id: data.ticket_id});
  }
- console.log(data);
+
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress}>
       <Text>From : {capitalizeString(data.departure_location)}</Text>
@@ -26,6 +26,7 @@ const navigation = useNavigation();
       <Text>Journey Date - {findDate(data.departure_date)}</Text>
       <Text>Departure Time : {extractDepattureTime(data.departure_date)}</Text>
       <Text>No. of Tickets - {data.no_of_tickets}</Text>
+      <Text>Travel Agency Name : {data.travel_agency_name}</Text>
       <Text>Amount - {data.amount}</Text>
       <Text style={styles.id}>Id : {data.ticket_id}</Text>
     </TouchableOpacity>
