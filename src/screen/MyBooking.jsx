@@ -88,7 +88,7 @@ export default function MyBooking() {
           />
         ) : (
           <Text style={styles.lable2}>
-            Looks empty, no upcoming trips found.
+            Looks empty, No upcoming trips found.
           </Text>
         ))}
       {selected === 2 &&
@@ -99,7 +99,7 @@ export default function MyBooking() {
           />
         ) : (
           <Text style={styles.lable2}>
-            Looks empty, no completed trips found.
+            Looks empty, No history found.
           </Text>
         ))}
     </View>

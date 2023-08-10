@@ -92,14 +92,14 @@ export default function TicketDetails() {
         text : 'Yes, I Want!',
         style : 'destructive',
         onPress : () => navigation.navigate(ROUTES.CANCELTICKET , 
-          { ticketId : ticketId , email : authData.userDetails.email , seat_numbers : seatNumbers , bus_id : ticketData[0].bus_id})
+          { ticketId : ticketId , email : authData.userDetails.email , seat_numbers : seatNumbers , bus_id : parseInt(ticketData[0].bus_id)})
       },
     ]);
   }
 
   return (
     <>
-      {ticketData.length > 0 && (
+      {ticketData.length > 0 ? (
         <View style={{backgroundColor: COLORS.WHITE, flex: 1}}>
           <View style={styles.routeContainer}>
             <View style={styles.routeFirstContainer}>
@@ -149,7 +149,7 @@ export default function TicketDetails() {
             <Text style={styles.cancelButtonText}>Cancel Ticket</Text>
           </TouchableOpacity> : <></>}
         </View>
-      )}
+      ) : <></>}
     </>
   );
 }

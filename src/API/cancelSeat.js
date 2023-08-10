@@ -7,10 +7,10 @@ export async function cancelSeat(ticket_id , email , seat_numbers , bus_id)
     myHeaders.append('Content-Type', 'application/json');
 
     var raw = JSON.stringify({
-        ticket_id : ticket_id,
+        bus_id : ticket_id,
         email : email,
         seat_numbers : seat_numbers,
-        bus_id : bus_id,
+        ticket_id : bus_id,
     });
 
     var requestOptions = {
