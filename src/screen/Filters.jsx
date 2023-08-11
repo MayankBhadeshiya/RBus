@@ -1,9 +1,10 @@
-import { StatusBar, View } from "react-native";
+import { ScrollView, StatusBar, View } from "react-native";
 import BusType from "../components/BusType";
 import ClearAndApply from "../components/ClearAndApply";
 import FilterBy from "../components/FilterBy";
 import SortBy from "../components/SortBy";
 import COLORS from "../constants/Colors";
+import BAFilterBy from "../components/BAFilterBy";
 
 export default function Filters() {
   return (
@@ -14,11 +15,12 @@ export default function Filters() {
         backgroundColor: COLORS.WHITE,
       }}>
       <StatusBar backgroundColor={COLORS.RED} />
-      <View>
+      <ScrollView>
         <SortBy />
-        <FilterBy />
+        <FilterBy/>
         <BusType />
-      </View>
+        <BAFilterBy/>
+      </ScrollView>
       <View>
         <ClearAndApply />
       </View>

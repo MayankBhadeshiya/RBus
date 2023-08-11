@@ -21,14 +21,13 @@ const navigation = useNavigation();
 
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress}>
-      <Text>From : {capitalizeString(data.departure_location)}</Text>
-      <Text>To : {capitalizeString(data.arrival_location)}</Text>
-      <Text>Journey Date - {findDate(data.departure_date)}</Text>
-      <Text>Departure Time : {extractDepattureTime(data.departure_date)}</Text>
-      <Text>No. of Tickets - {data.no_of_tickets}</Text>
-      <Text>Travel Agency Name : {data.travel_agency_name}</Text>
-      <Text>Amount - {data.amount}</Text>
-      <Text style={styles.id}>Id : {data.ticket_id}</Text>
+      <Text><Text style={{fontWeight : 'bold'}}>From : </Text>{capitalizeString(data.departure_location)}</Text>
+      <Text><Text style={{fontWeight : 'bold'}}>To :  </Text>{capitalizeString(data.arrival_location)}</Text>
+      <Text><Text style={{fontWeight : 'bold'}}>Journey Date -  </Text>{findDate(data.departure_date)}</Text>
+      <Text><Text style={{fontWeight : 'bold'}}>Departure Time :  </Text>{extractDepattureTime(data.departure_date)}</Text>
+      <Text><Text style={{fontWeight : 'bold'}}>No. of Tickets -  </Text>{data.no_of_tickets}</Text>
+      <Text><Text style={{fontWeight : 'bold'}}>Travel Agency Name :  </Text>{data.travel_agency_name}</Text>
+      <Text><Text style={{fontWeight : 'bold'}}>Amount - </Text>{data.amount} ₹</Text>
     </TouchableOpacity>
   );
 }

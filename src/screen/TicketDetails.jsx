@@ -82,7 +82,6 @@ export default function TicketDetails() {
     {
       seatNumbers.push(ticketData[i].seat_number);
     }
-    console.log(seatNumbers);
     Alert.alert('Ticket Cancellation' , 'You are about to cancel your bus ticket!' , [
       {
         text : 'Back',
@@ -100,7 +99,7 @@ export default function TicketDetails() {
   return (
     <>
       {ticketData.length > 0 ? (
-        <View style={{backgroundColor: COLORS.WHITE, flex: 1}}>
+        <SafeAreaView style={{backgroundColor: COLORS.WHITE, flex: 1}}>
           <View style={styles.routeContainer}>
             <View style={styles.routeFirstContainer}>
               <Text style={styles.cityName}>{capitalizeString(ticketData[0].departure_location)}</Text>
@@ -122,7 +121,7 @@ export default function TicketDetails() {
           <View style={styles.commenDetails}>
             <View style={styles.detail}>
               <Text style={styles.GrayFont}>Ticket ID :- </Text>
-              <Text style={styles.BlackFont}>{ticketId}</Text>
+              <Text style={[styles.BlackFont , {flexWrap : 'wrap' , flex : 1}]}>{ticketId}</Text>
             </View>
             <View style={styles.detail}>
               <Text style={styles.GrayFont}>Email ID :- </Text>
@@ -148,7 +147,7 @@ export default function TicketDetails() {
           {!isDeparted(ticketData[0].departure_date) ? <TouchableOpacity style={styles.cancelButton} onPress={CancelTicketHandler}>
             <Text style={styles.cancelButtonText}>Cancel Ticket</Text>
           </TouchableOpacity> : <></>}
-        </View>
+        </SafeAreaView>
       ) : <></>}
     </>
   );

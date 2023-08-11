@@ -19,7 +19,6 @@ export default function CancelTicket({navigation , route}) {
   };
   
   const {bus_id , email , seat_numbers , ticketId} = route.params;
-  console.log(route.params);
   async function cancelBusSeat()
   {
     setIsloading(true);

@@ -12,6 +12,12 @@ const initialState = {
         AC : false,
         NonAc : false,
     },
+    BusArrivalFilter : {
+        sunrise : false,
+        day : false,
+        sunset : false,
+        night : false,
+    }
 }
 
 const sortAndFiltersSlice = createSlice({
@@ -65,6 +71,26 @@ const sortAndFiltersSlice = createSlice({
             state.FilterBy.AC = false;
             state.FilterBy.NonAc = false;
             state.SortBy = '';
+            state.BusArrivalFilter.sunrise = false;
+            state.BusArrivalFilter.day = false;
+            state.BusArrivalFilter.sunset = false;
+            state.BusArrivalFilter.night = false;
+        },
+        setBAFsunrise(state)
+        {
+            state.BusArrivalFilter.sunrise = !state.BusArrivalFilter.sunrise;
+        },
+        setBAFday(state)
+        {
+            state.BusArrivalFilter.day = !state.BusArrivalFilter.day;
+        },
+        setBAFsunset(state)
+        {
+            state.BusArrivalFilter.sunset = !state.BusArrivalFilter.sunset;
+        },
+        setBAFnight(state)
+        {
+            state.BusArrivalFilter.night = !state.BusArrivalFilter.night;
         }
     }
 });

@@ -226,7 +226,7 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
                   style={styles.input}
                   value={values ? values[i]['username'] : ''}
                   onChangeText={text =>
-                    onChangeDetail(i, 'username', text.trim())
+                    onChangeDetail(i, 'username', text)
                   }></TextInput>
                 {error.show && error.users[i].username && (
                   <Text style={styles.errortext}>Enter valid name</Text>
@@ -240,7 +240,7 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
                   autoCapitalize="none"
                   style={styles.input}
                   value={values ? values[i]['age'] : ''}
-                  onChangeText={text => onChangeDetail(i, 'age', text.trim())}
+                  onChangeText={text => onChangeDetail(i, 'age', text)}
                   maxLength={10}></TextInput>
                 {error.show && error.users[i].age && (
                   <Text style={styles.errortext}>Enter valid age</Text>

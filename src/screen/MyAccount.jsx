@@ -6,7 +6,6 @@ import MyAccountnotLogin from '../components/MyAccountnotLogin';
 
 export default function MyAccount() {
   const token = useSelector(state => state.authReducer.token);
-  console.log(token);
   return (
     <View>
       {token !== '' ? (

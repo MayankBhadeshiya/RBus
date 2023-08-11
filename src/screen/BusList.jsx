@@ -31,6 +31,7 @@ export default function BusList({navigation, route}) {
   const routeDetail = useSelector(state => state.busListReducer.routeDetails);
   const connected = useSelector(state => state.connectionReducer.connection);
   const FilterBy = useSelector(state => state.sortAndFiltersReducer.FilterBy);
+  const BAFilterBy = useSelector(state => state.sortAndFiltersReducer.BusArrivalFilter)
   const SortBy = useSelector(state => state.sortAndFiltersReducer.SortBy);
   const dispatch = useDispatch()
   async function get() {
@@ -72,6 +73,7 @@ export default function BusList({navigation, route}) {
       routeDetail.end,
       routeDetail.date,
       FilterBy,
+      BAFilterBy,
       SortBy,
       page,
     );

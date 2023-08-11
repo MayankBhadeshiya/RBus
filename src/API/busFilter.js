@@ -1,25 +1,25 @@
 import {BASEURLB} from '../constants/Url';
 import {BASEURLP} from '../constants/Url';
 
-export async function getBusFilteredList(from, to, date, filters, sortBy, page) {
+export async function getBusFilteredList(from, to, date, filters, BAFilters, sortBy, page) {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
   var raw = JSON.stringify({
     departure_location: from,
     arrival_location: to,
     departure_date: date,
-    departure_time_before_6am: filters.sunrise,
-    departure_time_6am_to_12pm: filters.day,
-    departure_time_12pm_to_6pm: filters.sunset,
-    departure_time_after_6pm: filters.night,
+    departure_time_before_6am: filters.night,
+    departure_time_6am_to_12pm: filters.sunrise,
+    departure_time_12pm_to_6pm: filters.day,
+    departure_time_after_6pm: filters.sunset,
     ac: filters.AC,
     nonac: filters.NonAc,
     seater: filters.seater,
     sleeper: filters.sleeper,
-    arrival_time_before_6am: false,
-    arrival_time_6am_to_12pm: false,
-    arrival_time_12pm_to_6pm: false,
-    arrival_time_after_6pm: false,
+    arrival_time_before_6am: BAFilters.night,
+    arrival_time_6am_to_12pm: BAFilters.sunrise,
+    arrival_time_12pm_to_6pm: BAFilters.day,
+    arrival_time_after_6pm: BAFilters.sunset,
     departure_date_sort_ascending: sortBy === 'earlyDeparture',
     departure_date_sort_descending: sortBy === 'lateDeparture',
     arrival_date_sort_ascending: false,

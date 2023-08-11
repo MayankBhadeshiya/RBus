@@ -9,6 +9,7 @@ import Loader from '../components/Loader';
 import SomethingWentWrong from '../components/SomethingWentWrong';
 import {getTickets} from '../API/user';
 import isDeparted from '../util/isDeparted';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function MyBooking() {
   const authData = useSelector(state => state.authReducer);
@@ -18,6 +19,7 @@ export default function MyBooking() {
   const [selected, setSelected] = useState(1);
   const [error, setError] = useState(false);
   const [isLoading, setIsloading] = useState(false);
+  const isFocused = useIsFocused()
 
   async function get() {
     setIsloading(true);
@@ -50,10 +52,10 @@ export default function MyBooking() {
     }
   }
   useEffect(() => {
-    if (connected && authData.token !== '') {
+    if (connected && authData.token !== '' && isFocused) {
       get();
     }
-  }, [connected, authData.ticketBookedDuringThisSession]);
+  }, [connected, authData.ticketBookedDuringThisSession , isFocused]);
 
   if (authData.token === '') {
     return (
@@ -67,7 +69,7 @@ export default function MyBooking() {
     return <SomethingWentWrong />;
   }
   return (
-    <View>
+    <View style={{flex : 1}}>
       <View style={styles.lableConainer}>
         <Text style={styles.lable1}>
           All your bookings have been downloaded from RBus.
