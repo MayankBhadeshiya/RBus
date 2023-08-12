@@ -17,13 +17,13 @@ export default function Bus({data}) {
   }
 
   let busType = '';
-  if (data.type === 1 && data.bus_type === 1) {
+  if (data.bus_type === 'ac' && data.bus_seat_type === 'Seater') {
     busType = 'A/C Seater';
-  } else if (data.type === 1 && data.bus_type === 2) {
+  } else if (data.bus_type === 'ac' && data.bus_seat_type === 'Sleeper') {
     busType = 'A/C Sleeper';
-  } else if (data.type === 2 && data.bus_type === 1) {
+  } else if (data.bus_type === 'nonac' && data.bus_seat_type === 'Seater') {
     busType = 'NON A/C Seater';
-  } else if (data.type === 2 && data.bus_type === 2) {
+  } else if (data.bus_type === 'nonac' && data.bus_seat_type === 'Sleeper') {
     busType = 'NON A/C Sleeper';
   }
   

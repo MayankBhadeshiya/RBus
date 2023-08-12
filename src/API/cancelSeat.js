@@ -1,16 +1,16 @@
 import {BASEURLB} from '../constants/Url';
 import {BASEURLP} from '../constants/Url';
 
-export async function cancelSeat(ticket_id , email , seat_numbers , bus_id)
+export async function cancelSeat(bus_id, email , seat_numbers , ticket_id )
 {
     var myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
 
     var raw = JSON.stringify({
-        bus_id : ticket_id,
+        bus_id : bus_id,
         email : email,
         seat_numbers : seat_numbers,
-        ticket_id : bus_id,
+        ticket_id : ticket_id,
     });
 
     var requestOptions = {
