@@ -66,7 +66,7 @@ export default function ContactInfo({title, departureTime, arrivalTime}) {
   function onValidate() {
     const email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const phone = /^[6-9]\d{9}$/;
-    const userName = /^[a-zA-Z]+[a-zA-Z\s]*[a-zA-Z]+$/;
+    const userName = /^[a-zA-Z]+([a-zA-Z0-9]+\s?)*[a-zA-Z]+$/;
     let flag = false;
 
     if (email.test(details.email)) {
