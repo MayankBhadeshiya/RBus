@@ -162,8 +162,9 @@ export default function BusList({navigation, route}) {
           }
         }}
         onEndReachedThreshold={10}
+        ListFooterComponent={!route.params.isClear && !hasClear && <ClearFilterButton onPress={clearFilter} />}
       />
-      {!route.params.isClear && !hasClear && <ClearFilterButton onPress={clearFilter} />}
+      
       <SafeAreaView>
         <TouchableOpacity
           style={styles.sortAndFilterButton}

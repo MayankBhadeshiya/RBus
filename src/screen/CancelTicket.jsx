@@ -80,7 +80,7 @@ export default function CancelTicket({navigation , route}) {
         )}
       </View>
       <TouchableOpacity style={styles.button} onPress={backToHome}>
-        <Text style={styles.buttonText}>Back to Home</Text>
+        <Text style={styles.buttonText}>Back to My Booking</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
